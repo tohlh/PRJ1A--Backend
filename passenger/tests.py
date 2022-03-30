@@ -18,7 +18,7 @@ class PassengerModelTests(TestCase):
                                     content_type='application/json')
         self.assertEqual(response.status_code, 400)
 
-    def test_invalid_token_verify(self):
+    def test_invalid_passenger_token_verify(self):
         payload = {
             'token': 'invalidtoken11223344'
         }
