@@ -34,8 +34,6 @@ unit-test:
 
   before_script:
     - pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
-    - python3 manage.py makemigrations
-    - python3 manage.py migrate
   script:
     - python3 manage.py test
     - UNIT_TEST_RET=$?
