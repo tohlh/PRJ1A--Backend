@@ -22,7 +22,7 @@ style-test:
   before_script:
     - pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
   script:
-    - pycodestyle ./prj1a/urls.py
+    - pycodestyle ./passenger ./driver ./prj1a/urls.py
     - PYCODESTYLE_RET=$?
     - if [ $PYCODESTYLE_RET \> 0 ]; then exit $PYCODESTYLE_RET; fi;
     - exit $PYCODESTYLE_RET
