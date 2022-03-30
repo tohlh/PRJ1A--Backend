@@ -1,4 +1,4 @@
-from .views import PasasengerProtectedView
+from .views import PassengerProtectedView
 
 from django.urls import path
 
@@ -18,5 +18,5 @@ urlpatterns = [
      path('token/verify',
           PassengerTokenVerifyView.as_view(),
           name='passenger_token_verify'),
-     path('protected', PasasengerProtectedView),
+     path('protected', PassengerProtectedView),
 ]
