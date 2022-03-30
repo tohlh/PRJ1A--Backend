@@ -9,6 +9,8 @@ djangorestframework = "*"
 django-cors-headers = "*"
 python-decouple = "*"
 pycodestyle = "*"
+requests = "*"
+pyjwt = "*"
 
 [dev-packages]
 
