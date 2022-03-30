@@ -1,0 +1,5 @@
+.git
+.gitlab-ci.yml
+.env
+db.sqlite3
+sonar-projects.properties
