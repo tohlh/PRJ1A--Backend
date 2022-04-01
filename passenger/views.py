@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 
 
 @api_view(('GET',))
-def PasasengerProtectedView(request):
+def PassengerProtectedView(request):
     permission_classes = (IsAuthenticated,)
     encoded_token = request.META.get('HTTP_AUTHORIZATION')[7:]
     decoded_token = jwt.decode(

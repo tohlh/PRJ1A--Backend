@@ -25,7 +25,7 @@ class PassengerTokenObtainPairSerializer(TokenObtainPairSerializer):
         user.set_password(openid)
         user.save()
 
-        passenger, = Passenger.objects.get_or_create(
+        passenger, _ = Passenger.objects.get_or_create(
             id=user.id,
             username=openid
         )
