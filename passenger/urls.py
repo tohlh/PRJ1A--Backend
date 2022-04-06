@@ -1,4 +1,4 @@
-from .views import PassengerInfoView
+from .views.info import PassengerInfoView
 from django.urls import path
 from passenger.auth import (
     PassengerTokenObtainPairView,
