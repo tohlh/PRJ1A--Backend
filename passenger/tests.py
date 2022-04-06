@@ -1,32 +1,30 @@
 from django.test import TestCase
 
 
+def authenticate(self):
+    payload = {
+        'code': 'superuser0'
+    }
+    response = self.client.post('/api/passenger/token',
+                                data=payload,
+                                content_type='application/json')
+    access_token = response.data['access']
+    refresh_token = response.data['refresh']
+    return access_token, refresh_token, response.status_code
+
+
 class PassengerTokenTest(TestCase):
     def setUp(self):
         pass
 
     def test_obtain_passenger_token_pair(self):
-        payload = {
-            'code': 'superuser0'
-        }
-        response = self.client.post('/api/passenger/token',
-                                    data=payload,
-                                    content_type='application/json')
+        _, _, status_code = authenticate(self)
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(status_code, 200)
 
     def test_refresh_passenger_token(self):
-        payload = {
-            'code': 'superuser0'
-        }
-        response = self.client.post('/api/passenger/token',
-                                    data=payload,
-                                    content_type='application/json')
-
-        access_token = response.data['access']
-        refresh_token = response.data['refresh']
-
-        self.assertEqual(response.status_code, 200)
+        access_token, refresh_token, status_code = authenticate(self)
+        self.assertEqual(status_code, 200)
 
         payload = {
             'refresh': refresh_token
@@ -50,17 +48,8 @@ class PassengerTokenTest(TestCase):
         self.assertEqual(response.status_code, 401)
 
     def test_verify_passenger_token(self):
-        payload = {
-            'code': 'superuser0'
-        }
-        response = self.client.post('/api/passenger/token',
-                                    data=payload,
-                                    content_type='application/json')
-
-        access_token = response.data['access']
-        refresh_token = response.data['refresh']
-
-        self.assertEqual(response.status_code, 200)
+        access_token, refresh_token, status_code = authenticate(self)
+        self.assertEqual(status_code, 200)
 
         payload = {
             'token': refresh_token
