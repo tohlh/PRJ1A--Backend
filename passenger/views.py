@@ -42,7 +42,7 @@ def PassengerInfoView(request):
     decoded_token = decode_user_token(request)
     passenger_id = decoded_token['user_id']
 
-    def driver_info_response(driver_id):
+    def passenger_info_response(passenger_id):
         passenger_object = Passenger.objects.get(id=passenger_id)
         payload = {
             'username': passenger_object.username,
@@ -50,11 +50,11 @@ def PassengerInfoView(request):
         return Response(payload, 200)
 
     if request.method == 'GET':
-        return driver_info_response(passenger_id)
+        return passenger_info_response(passenger_id)
     elif request.method == 'POST':
         Passenger.objects.filter(id=passenger_id).update(
             username=request.data['username'],
         )
-        return driver_info_response(passenger_id)
+        return passenger_info_response(passenger_id)
 
     return internal_error_response()
