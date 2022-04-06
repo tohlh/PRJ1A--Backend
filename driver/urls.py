@@ -1,6 +1,5 @@
-from .views import DriverProtectedView
+from .views import DriverInfoView
 from django.urls import path
-
 from driver.auth import (
     DriverTokenObtainPairView,
     DriverTokenRefreshView,
@@ -8,6 +7,7 @@ from driver.auth import (
 )
 
 urlpatterns = [
+     # driver's tokens
      path('token',
           DriverTokenObtainPairView.as_view(),
           name='driver_token_obtain_pair'),
@@ -17,5 +17,8 @@ urlpatterns = [
      path('token/verify',
           DriverTokenVerifyView.as_view(),
           name='driver_token_verify'),
-     path('protected', DriverProtectedView),
+     # driver's info
+     path('info',
+          DriverInfoView,
+          name='driver_info'),
 ]

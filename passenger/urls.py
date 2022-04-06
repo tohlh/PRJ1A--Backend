@@ -1,7 +1,5 @@
-from .views import PassengerProtectedView
-
+from .views import PassengerInfoView
 from django.urls import path
-
 from passenger.auth import (
     PassengerTokenObtainPairView,
     PassengerTokenRefreshView,
@@ -9,6 +7,7 @@ from passenger.auth import (
 )
 
 urlpatterns = [
+     # passenger's tokens
      path('token',
           PassengerTokenObtainPairView.as_view(),
           name='passenger_token_obtain_pair'),
@@ -18,5 +17,8 @@ urlpatterns = [
      path('token/verify',
           PassengerTokenVerifyView.as_view(),
           name='passenger_token_verify'),
-     path('protected', PassengerProtectedView),
+     # driver's info
+     path('info',
+          PassengerInfoView,
+          name='passenger_info'),
 ]
