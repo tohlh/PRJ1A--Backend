@@ -24,10 +24,7 @@ class DriverTokenObtainPairSerializer(TokenObtainPairSerializer):
         user.set_password(openid)
         user.save()
 
-        driver, _ = Driver.objects.get_or_create(
-            id=user.id,
-            username=""
-        )
+        driver, _ = Driver.objects.get_or_create(id=user.id)
         driver.save()
 
         return user
