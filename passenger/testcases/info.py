@@ -19,6 +19,7 @@ class PassengerInfoTest(TestCase):
         self.assertEqual(status_code, 200)
         payload = {
             'username': 'updatedUsername',
+            'phone': '01234567890'
         }
         response = self.client.post(
             '/api/passenger/info',

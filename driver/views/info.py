@@ -1,13 +1,7 @@
 from driver.models import Driver
 from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
-from driver.views.utils import (
-    get_driver_id,
-    is_authorized,
-    payload_response,
-    unauthorized_response,
-    internal_error_response
-)
+from driver.views.utils import *
 
 
 @api_view(('GET', 'POST'))
@@ -22,6 +16,7 @@ def DriverInfoView(request):
         payload = {
             'username': driver_object.username,
             'carplate': driver_object.carplate,
+            'phone': driver_object.phone,
         }
         return payload_response(payload)
 
@@ -30,7 +25,8 @@ def DriverInfoView(request):
     elif request.method == 'POST':
         Driver.objects.filter(id=driver_id).update(
             username=request.data['username'],
-            carplate=request.data['carplate']
+            carplate=request.data['carplate'],
+            phone=request.data['phone'],
         )
         return driver_info_response(driver_id)
 

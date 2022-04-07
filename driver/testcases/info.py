@@ -19,7 +19,8 @@ class DriverInfoTest(TestCase):
         self.assertEqual(status_code, 200)
         payload = {
             'username': 'updatedUsername',
-            'carplate': '京123123'
+            'carplate': '京123123',
+            'phone': '01234567890',
         }
         response = self.client.post(
             '/api/driver/info',
