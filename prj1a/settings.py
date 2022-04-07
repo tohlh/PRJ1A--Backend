@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'passenger.apps.PassengerConfig',
     'driver.apps.DriverConfig',
+    'order.apps.OrderConfig',
     'corsheaders',
     'rest_framework',
 ]

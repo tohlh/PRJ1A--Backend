@@ -1,4 +1,4 @@
-from .views import DriverInfoView
+from .views.info import DriverInfoView
 from django.urls import path
 from driver.auth import (
     DriverTokenObtainPairView,
