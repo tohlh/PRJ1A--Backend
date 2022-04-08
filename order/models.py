@@ -3,49 +3,27 @@ from passenger.models import Passenger
 from driver.models import Driver
 
 
-class StartPOI(models.Model):
-    name = models.CharField(max_length=150)
-    address = models.CharField(max_length=150)
-    latitude = models.FloatField()
-    longitude = models.FloatField()
-
-
-class EndPOI(models.Model):
-    name = models.CharField(max_length=150)
-    address = models.CharField(max_length=150)
-    latitude = models.FloatField()
-    longitude = models.FloatField()
-
-
-class BeforePathPoint(models.Model):
-    latitude = models.FloatField()
-    longitude = models.FloatField()
-    created_at = models.DateTimeField(auto_now_add=True)
-
-
-class AfterPathPoint(models.Model):
-    latitude = models.FloatField()
-    longitude = models.FloatField()
-    created_at = models.DateTimeField(auto_now_add=True)
-
-
 class Order(models.Model):
-    """
-    CASCADE means delete this Order when the associated driver or passenger is deleted
-    """
-    passenger = models.ForeignKey(Passenger, on_delete=models.CASCADE)
-    driver = models.ForeignKey(Driver, on_delete=models.CASCADE)
+    passenger = models.ForeignKey(Passenger, on_delete=models.DO_NOTHING)
+    driver = models.ForeignKey(Driver, on_delete=models.DO_NOTHING)
 
     # Only used before the driver picks up the passenger
     passenger_lat = models.FloatField()
     passenger_long = models.FloatField()
 
-    starting_point = models.ForeignKey(StartPOI, on_delete=models.PROTECT)
-    ending_point = models.ForeignKey(EndPOI, on_delete=models.PROTECT)
+    start_POI_name = models.CharField(max_length=150)
+    start_POI_address = models.CharField(max_length=150)
+    start_POI_lat = models.FloatField()
+    start_POI_long = models.FloatField()
+
+    end_POI_name = models.CharField(max_length=150)
+    end_POI_address = models.CharField(max_length=150)
+    end_POI_lat = models.FloatField()
+    end_POI_long = models.FloatField()
     
-    # Started recording when the driver accepts the order
-    before_pickup_path = models.ManyToManyField(BeforePathPoint)
-    after_pickup_path = models.ManyToManyField(AfterPathPoint)
+    # Encode a list of coordinates with Base64
+    before_pickup_path = models.TextField()
+    after_pickup_path = models.TextField()
     # Distance based on after_pickup_path
     distance = models.DecimalField(max_digits=6, decimal_places=2)
 
