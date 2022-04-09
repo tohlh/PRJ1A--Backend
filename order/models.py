@@ -32,7 +32,7 @@ class Order(models.Model):
 
     # Only used before the driver picks up the passenger
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField()
     
     # After the order is fulfilled
     ended_at = models.DateTimeField()
