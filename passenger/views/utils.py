@@ -1,6 +1,7 @@
 import jwt
 from prj1a.settings import SIMPLE_JWT
 from rest_framework.response import Response
+from math import radians, cos, sin, asin, sqrt
 from datetime import datetime, timedelta
 from order.models import Order
 from django.db.models import Q
@@ -39,6 +40,20 @@ def pending_order_exists(passenger_id):
         return True
     else:
         return False
+
+
+def calc_distance(lat_1, long_1, lat_2, long_2):
+    lat_1 = radians(lat_1)
+    long_1 = radians(long_1)
+    lat_2 = radians(lat_2)
+    long_2 = radians(long_2)
+
+    d_lat = lat_2 - lat_1
+    d_long = long_2 - long_1
+    a = sin(d_lat / 2)**2 + cos(lat_1) * cos(lat_2) * sin(d_long / 2)**2
+    c = 2 * asin(sqrt(a))
+    r = 6371
+    return(c * r)
 
 
 # Http Responses
