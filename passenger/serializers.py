@@ -18,9 +18,20 @@ class NewOrderSerializer(serializers.Serializer):
     end_POI_lat = serializers.FloatField(required=True)
     end_POI_long = serializers.FloatField(required=True)
 
+    est_price = serializers.DecimalField(read_only=True,
+                                         max_digits=6,
+                                         decimal_places=2)
+
     def create(self, validated_data):
         request = self.context.get('request')
         passenger_id = get_passenger_id(request)
         validated_data['passenger'] = Passenger.objects.get(id=passenger_id)
         validated_data['status'] = 1
+        # TODO: complete estimation of price
+        validated_data['est_price'] = calc_distance(
+            validated_data['start_POI_lat'],
+            validated_data['start_POI_long'],
+            validated_data['end_POI_lat'],
+            validated_data['end_POI_long']
+        )
         return Order.objects.create(**validated_data)

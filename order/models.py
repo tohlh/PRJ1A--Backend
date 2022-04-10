@@ -27,7 +27,7 @@ class Order(models.Model):
     # Distance based on after_pickup_path
     distance = models.DecimalField(default='0', max_digits=6, decimal_places=2)
 
-    est_price = models.DecimalField(default='0', max_digits=6, decimal_places=2)
+    est_price = models.DecimalField(max_digits=6, decimal_places=2)
     real_price = models.DecimalField(default='0', max_digits=6, decimal_places=2)
 
     # Only used before the driver picks up the passenger
