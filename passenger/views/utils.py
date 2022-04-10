@@ -1,6 +1,9 @@
 import jwt
 from prj1a.settings import SIMPLE_JWT
 from rest_framework.response import Response
+from datetime import datetime, timedelta
+from order.models import Order
+from django.db.models import Q
 
 
 # Passenger Authentication
@@ -24,9 +27,29 @@ def get_passenger_id(request):
     return decoded_token['user_id']
 
 
+# Orders
+def pending_order_exists(passenger_id):
+    time_threshold = datetime.now() - timedelta(minutes=2)
+    pending_order = Order.objects.filter(
+        Q(status=0) | Q(status=1),
+        passenger__id=passenger_id,
+        updated_at__gt=time_threshold
+    )
+    if pending_order.exists():
+        return True
+    else:
+        return False
+
+
 # Http Responses
 def payload_response(payload):
     return Response(payload, 200)
+
+
+def bad_request_response(message):
+    return Response({
+        'response': message
+    }, 400)
 
 
 def unauthorized_response():
