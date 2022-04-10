@@ -27,8 +27,7 @@ class NewOrderSerializer(serializers.Serializer):
         passenger_id = get_passenger_id(request)
         validated_data['passenger'] = Passenger.objects.get(id=passenger_id)
         validated_data['status'] = 1
-        # TODO: complete estimation of price
-        validated_data['est_price'] = calc_distance(
+        validated_data['est_price'] = est_price(
             validated_data['start_POI_lat'],
             validated_data['start_POI_long'],
             validated_data['end_POI_lat'],
