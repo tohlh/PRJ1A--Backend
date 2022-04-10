@@ -1,7 +1,7 @@
 from passenger.views.utils import *
+from passenger.serializers import *
 from passenger.models import Passenger
-from passenger.serializers import NewOrderSerializer
-from rest_framework.parsers import JSONParser
+from django.forms import model_to_dict
 from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 
@@ -47,5 +47,26 @@ def PassengerNewOrderView(request):
     )
     if serializer.is_valid():
         serializer.save()
+        return payload_response(serializer.data)
+    return Response(serializer.errors, status=400)
+
+
+@api_view(('GET',))
+def PassengerCurrentOrderView(request):
+    permission_classes = (IsAuthenticated,)
+    if not is_authorized(request):
+        return unauthorized_response()
+    passenger_id = get_passenger_id(request)
+
+    if not pending_order_exists(passenger_id):
+        return bad_request_response('You do not have an active order.')
+
+    order = get_current_order(passenger_id)
+    order = model_to_dict(order)
+    serializer = NewOrderSerializer(
+        data=order,
+        context={'request': request}
+    )
+    if serializer.is_valid():
         return payload_response(serializer.data)
     return Response(serializer.errors, status=400)
