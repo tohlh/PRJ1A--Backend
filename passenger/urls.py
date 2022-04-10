@@ -32,4 +32,7 @@ urlpatterns = [
      path('order/cancel',
           PassengerCancelOrderView,
           name='cancel_order'),
+     path('order/update-location',
+          PassengerUpdateLocationView,
+          name='update_location')
 ]

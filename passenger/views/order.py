@@ -84,3 +84,33 @@ def PassengerCancelOrderView(request):
         cancel_current_order(passenger_id)
 
     return payload_response({})
+
+
+@api_view(('POST',))
+def PassengerUpdateLocationView(request):
+    permission_classes = (IsAuthenticated,)
+    if not is_authorized(request):
+        return unauthorized_response()
+    passenger_id = get_passenger_id(request)
+
+    if not pending_order_exists(passenger_id):
+        return bad_request_response('You do not have an active order.')
+
+    data = request.data
+    keys = ['passenger_lat', 'passenger_long']
+    for key in keys:
+        if key not in data:
+            return bad_request_response(f'\'{key}\' is required')
+
+    update_location(passenger_id,
+                    data['passenger_lat'],
+                    data['passenger_long'])
+    order = get_current_order(passenger_id)
+    order = model_to_dict(order)
+    serializer = NewOrderSerializer(
+        data=order,
+        context={'request': request}
+    )
+    if serializer.is_valid():
+        return payload_response(serializer.data)
+    return Response(serializer.errors, status=400)
