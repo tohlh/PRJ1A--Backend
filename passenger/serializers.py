@@ -2,6 +2,7 @@ from rest_framework import serializers
 from order.models import Order
 from passenger.views.utils import *
 from passenger.models import Passenger
+from django.utils import timezone
 
 
 class NewOrderSerializer(serializers.Serializer):
@@ -33,4 +34,5 @@ class NewOrderSerializer(serializers.Serializer):
             validated_data['end_POI_lat'],
             validated_data['end_POI_long']
         )
+        validated_data['updated_at'] = timezone.now()
         return Order.objects.create(**validated_data)
