@@ -56,6 +56,12 @@ def calc_distance(lat_1, long_1, lat_2, long_2):
     return(c * r)
 
 
+def est_price(lat_1, long_1, lat_2, long_2):
+    ret = 10 * calc_distance(lat_1, long_1, lat_2, long_2)
+    ret = round(ret, 2)
+    return ret
+
+
 # Http Responses
 def payload_response(payload):
     return Response(payload, 200)
