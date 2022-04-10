@@ -1,5 +1,9 @@
+from datetime import timedelta
+from django.utils import timezone
 from .utils import *
 from order.models import Order
+from passenger.views.utils import est_price
+from passenger.models import Passenger
 
 
 class PassengerEstimatePriceTest(TestCase):
@@ -68,7 +72,28 @@ class PassengerEstimatePriceTest(TestCase):
 
 class PassengerCreateOrderTest(TestCase):
     def setUp(self):
-        pass
+        access_token, refresh_token, status_code = authenticate(self)
+        past_order = Order.objects.create(
+            passenger=Passenger.objects.get(id=1),
+            start_POI_name="清华大学",
+            start_POI_address="北京市海淀区双清路30号",
+            start_POI_lat=39.99970025463166,
+            start_POI_long=116.32636879642432,
+            end_POI_name="故宫博物院",
+            end_POI_address="中国北京市东城区景山前街4号",
+            end_POI_lat=39.9136172322172,
+            end_POI_long=116.39729231302886,
+            passenger_lat=39.99970025463166,
+            passenger_long=116.32636879642432,
+            est_price=est_price(
+                39.99970025463166,
+                116.32636879642432,
+                39.9136172322172,
+                116.39729231302886
+            ),
+            status=1,
+            updated_at=timezone.now() - timedelta(minutes=5)
+        )
 
     def test_create_order(self):
         access_token, refresh_token, status_code = authenticate(self)
