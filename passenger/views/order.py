@@ -1,3 +1,4 @@
+import passenger
 from passenger.views.utils import *
 from passenger.serializers import *
 from passenger.models import Passenger
@@ -70,3 +71,16 @@ def PassengerCurrentOrderView(request):
     if serializer.is_valid():
         return payload_response(serializer.data)
     return Response(serializer.errors, status=400)
+
+
+@api_view(('GET',))
+def PassengerCancelOrderView(request):
+    permission_classes = (IsAuthenticated,)
+    if not is_authorized(request):
+        return unauthorized_response()
+    passenger_id = get_passenger_id(request)
+
+    if pending_order_exists(passenger_id):
+        cancel_current_order(passenger_id)
+
+    return payload_response({})

@@ -53,6 +53,15 @@ def get_current_order(passenger_id):
     return pending_order
 
 
+def cancel_current_order(passenger_id):
+    time_threshold = timezone.now() - timedelta(minutes=2)
+    pending_order = Order.objects.filter(
+        Q(status=0) | Q(status=1),
+        passenger__id=passenger_id,
+        updated_at__gt=time_threshold
+    ).update(status=3)
+
+
 def calc_distance(lat_1, long_1, lat_2, long_2):
     lat_1 = radians(lat_1)
     long_1 = radians(long_1)
