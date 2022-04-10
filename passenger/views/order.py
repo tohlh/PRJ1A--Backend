@@ -14,7 +14,6 @@ def PassengerEstimatePriceView(request):
     passenger_id = get_passenger_id(request)
 
     data = request.data
-    print(data)
     keys = ['start_POI_lat', 'start_POI_long', 'end_POI_lat', 'end_POI_long']
     for key in keys:
         if key not in data:
