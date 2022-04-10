@@ -20,6 +20,9 @@ urlpatterns = [
           PassengerInfoView,
           name='passenger_info'),
      # passenger's order
+     path('order/est-price',
+          PassengerEstimatePriceView,
+          name='estimate_price'),
      path('order/new',
           PassengerNewOrderView,
           name='new_order'),
