@@ -2,7 +2,8 @@ import jwt
 from prj1a.settings import SIMPLE_JWT
 from rest_framework.response import Response
 from math import radians, cos, sin, asin, sqrt
-from datetime import datetime, timedelta
+from datetime import timedelta
+from django.utils import timezone
 from order.models import Order
 from django.db.models import Q
 
@@ -30,7 +31,7 @@ def get_passenger_id(request):
 
 # Orders
 def pending_order_exists(passenger_id):
-    time_threshold = datetime.now() - timedelta(minutes=2)
+    time_threshold = timezone.now() - timedelta(minutes=2)
     pending_order = Order.objects.filter(
         Q(status=0) | Q(status=1),
         passenger__id=passenger_id,
