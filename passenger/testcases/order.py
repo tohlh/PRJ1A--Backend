@@ -151,3 +151,45 @@ class PassengerCreateOrderTest(TestCase):
             **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
         )
         self.assertEqual(response.status_code, 400)
+
+    def test_get_current_order(self):
+        access_token, refresh_token, status_code = authenticate(self)
+        self.assertEqual(status_code, 200)
+
+        # No current order
+        response = self.client.get(
+            '/api/passenger/order/current',
+            content_type='application/json',
+            **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
+        )
+        self.assertEqual(response.status_code, 400)
+
+        payload = {
+            "start_POI_name": "清华大学",
+            "start_POI_address": "北京市海淀区双清路30号",
+            "start_POI_lat": "39.99970025463166",
+            "start_POI_long": "116.32636879642432",
+            "end_POI_name": "故宫博物院",
+            "end_POI_address": "中国北京市东城区景山前街4号",
+            "end_POI_lat": "39.9136172322172",
+            "end_POI_long": "116.39729231302886",
+            "passenger_lat": "39.99970025463166",
+            "passenger_long": "116.32636879642432"
+        }
+
+        # Add a new order
+        response = self.client.post(
+            '/api/passenger/order/new',
+            data=payload,
+            content_type='application/json',
+            **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
+        )
+        self.assertEqual(response.status_code, 200)
+
+        # Check for the current order
+        response = self.client.get(
+            '/api/passenger/order/current',
+            content_type='application/json',
+            **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
+        )
+        self.assertEqual(response.status_code, 200)
