@@ -17,9 +17,8 @@ def PassengerNewOrderView(request):
     if pending_order_exists(passenger_id):
         return bad_request_response('There is already an active order.')
 
-    data = JSONParser().parse(request)
     serializer = NewOrderSerializer(
-        data=data,
+        data=request.data,
         context={'request': request}
     )
     if serializer.is_valid():
