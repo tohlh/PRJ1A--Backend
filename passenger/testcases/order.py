@@ -9,7 +9,7 @@ class PassengerOrderTest(TestCase):
         # valid request
         access_token, refresh_token, status_code = authenticate(self)
         self.assertEqual(status_code, 200)
-        
+
         payload = {
             'start_POI_lat': '39.99970025463166',
             'start_POI_long': '116.32636879642432',
@@ -63,4 +63,3 @@ class PassengerOrderTest(TestCase):
             **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
         )
         self.assertEqual(response.status_code, 400)
-        
