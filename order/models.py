@@ -47,3 +47,5 @@ class Order(models.Model):
     5, done (unpaid)
     6, done (paid)
     """
+    class Meta:
+        ordering = ['created_at']
