@@ -1,5 +1,5 @@
 from passenger.views.utils import *
-from passenger.serializers import *
+from order.serializers import *
 from django.forms import model_to_dict
 from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
@@ -40,7 +40,7 @@ def PassengerNewOrderView(request):
     if pending_order_exists(passenger_id):
         return bad_request_response('There is already an active order.')
 
-    serializer = NewOrderSerializer(
+    serializer = PassengerNewOrderSerializer(
         data=request.data,
         context={'request': request}
     )
@@ -62,7 +62,7 @@ def PassengerCurrentOrderView(request):
 
     order = get_current_order(passenger_id)
     order = model_to_dict(order)
-    serializer = NewOrderSerializer(
+    serializer = OrderSerializer(
         data=order,
         context={'request': request}
     )
@@ -105,7 +105,7 @@ def PassengerUpdateLocationView(request):
                     data['passenger_long'])
     order = get_current_order(passenger_id)
     order = model_to_dict(order)
-    serializer = NewOrderSerializer(
+    serializer = OrderSerializer(
         data=order,
         context={'request': request}
     )
@@ -129,8 +129,7 @@ def PassengerListOrdersView(request):
     )
     orders = [model_to_dict(x) for x in orders]
     orders = orders[offset:offset+limit]
-
-    serializer = NewOrderSerializer(
+    serializer = OrderSerializer(
         data=orders,
         many=True
     )
