@@ -62,7 +62,7 @@ def PassengerCurrentOrderView(request):
 
     order = get_current_order(passenger_id)
     order = model_to_dict(order)
-    serializer = OrderSerializer(
+    serializer = PassengerOrderSerializer(
         data=order,
         context={'request': request}
     )
@@ -105,7 +105,7 @@ def PassengerUpdateLocationView(request):
                     data['passenger_long'])
     order = get_current_order(passenger_id)
     order = model_to_dict(order)
-    serializer = OrderSerializer(
+    serializer = PassengerOrderSerializer(
         data=order,
         context={'request': request}
     )
@@ -129,7 +129,7 @@ def PassengerListOrdersView(request):
     )
     orders = [model_to_dict(x) for x in orders]
     orders = orders[offset:offset+limit]
-    serializer = OrderSerializer(
+    serializer = PassengerOrderSerializer(
         data=orders,
         many=True
     )

@@ -5,7 +5,7 @@ from passenger.views.utils import *
 from django.utils import timezone
 
 
-class OrderSerializer(serializers.ModelSerializer):
+class PassengerOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ['driver', 'passenger_lat', 'passenger_long',
