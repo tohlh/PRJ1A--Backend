@@ -5,6 +5,15 @@ from passenger.views.utils import *
 from django.utils import timezone
 
 
+class OrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = ['driver', 'passenger_lat', 'passenger_long',
+                  'start_POI_name', 'start_POI_address', 'start_POI_lat', 'start_POI_long',
+                  'end_POI_name', 'end_POI_address', 'end_POI_lat', 'end_POI_long',
+                  'est_price']
+
+
 class PassengerNewOrderSerializer(serializers.Serializer):
     passenger_lat = serializers.FloatField(required=True)
     passenger_long = serializers.FloatField(required=True)
@@ -36,39 +45,3 @@ class PassengerNewOrderSerializer(serializers.Serializer):
         )
         validated_data['updated_at'] = timezone.now()
         return Order.objects.create(**validated_data)
-
-
-class CurrentOrderSerializer(serializers.Serializer):
-    driver = serializers.RelatedField(read_only=True)
-    passenger_lat = serializers.FloatField(required=True)
-    passenger_long = serializers.FloatField(required=True)
-
-    start_POI_name = serializers.CharField(required=True, max_length=150)
-    start_POI_address = serializers.CharField(required=True, max_length=150)
-    start_POI_lat = serializers.FloatField(required=True)
-    start_POI_long = serializers.FloatField(required=True)
-
-    end_POI_name = serializers.CharField(required=True, max_length=150)
-    end_POI_address = serializers.CharField(required=True, max_length=150)
-    end_POI_lat = serializers.FloatField(required=True)
-    end_POI_long = serializers.FloatField(required=True)
-
-    est_price = serializers.DecimalField(read_only=True,
-                                         max_digits=6,
-                                         decimal_places=2)
-
-
-class ListOrderSerializer(serializers.Serializer):
-    driver = serializers.RelatedField(read_only=True)
-    passenger_lat = serializers.FloatField(read_only=True)
-    passenger_long = serializers.FloatField(read_only=True)
-
-    start_POI_name = serializers.CharField(read_only=True, max_length=150)
-    start_POI_address = serializers.CharField(read_only=True, max_length=150)
-    start_POI_lat = serializers.FloatField(read_only=True)
-    start_POI_long = serializers.FloatField(read_only=True)
-
-    end_POI_name = serializers.CharField(read_only=True, max_length=150)
-    end_POI_address = serializers.CharField(read_only=True, max_length=150)
-    end_POI_lat = serializers.FloatField(read_only=True)
-    end_POI_long = serializers.FloatField(read_only=True)
