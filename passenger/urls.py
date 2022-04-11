@@ -1,10 +1,8 @@
-from .views.info import PassengerInfoView
 from django.urls import path
-from passenger.auth import (
-    PassengerTokenObtainPairView,
-    PassengerTokenRefreshView,
-    PassengerTokenVerifyView,
-)
+from passenger.auth import *
+from passenger.views.info import *
+from passenger.views.order import *
+
 
 urlpatterns = [
      # passenger's tokens
@@ -17,8 +15,27 @@ urlpatterns = [
      path('token/verify',
           PassengerTokenVerifyView.as_view(),
           name='passenger_token_verify'),
-     # driver's info
+     # passenger's info
      path('info',
           PassengerInfoView,
           name='passenger_info'),
+     # passenger's order
+     path('order/est-price',
+          PassengerEstimatePriceView,
+          name='estimate_price'),
+     path('order/new',
+          PassengerNewOrderView,
+          name='new_order'),
+     path('order/current',
+          PassengerCurrentOrderView,
+          name='current_order'),
+     path('order/cancel',
+          PassengerCancelOrderView,
+          name='cancel_order'),
+     path('order/update-location',
+          PassengerUpdateLocationView,
+          name='update_location'),
+     path('order/list',
+          PassengerListOrdersView,
+          name='list_orders')
 ]
