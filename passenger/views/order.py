@@ -1,7 +1,5 @@
-import passenger
 from passenger.views.utils import *
 from passenger.serializers import *
-from passenger.models import Passenger
 from django.forms import model_to_dict
 from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
@@ -110,6 +108,31 @@ def PassengerUpdateLocationView(request):
     serializer = NewOrderSerializer(
         data=order,
         context={'request': request}
+    )
+    if serializer.is_valid():
+        return payload_response(serializer.data)
+    return Response(serializer.errors, status=400)
+
+
+@api_view(('GET',))
+def PassengerListOrdersView(request):
+    permission_classes = (IsAuthenticated,)
+    if not is_authorized(request):
+        return unauthorized_response()
+    passenger_id = get_passenger_id(request)
+
+    offset = int(request.GET.get('offset', 0))
+    limit = int(request.GET.get('limit', 10))
+
+    orders = Order.objects.filter(
+        passenger__id=passenger_id
+    )
+    orders = [model_to_dict(x) for x in orders]
+    orders = orders[offset:offset+limit]
+
+    serializer = NewOrderSerializer(
+        data=orders,
+        many=True
     )
     if serializer.is_valid():
         return payload_response(serializer.data)

@@ -34,5 +34,8 @@ urlpatterns = [
           name='cancel_order'),
      path('order/update-location',
           PassengerUpdateLocationView,
-          name='update_location')
+          name='update_location'),
+     path('order/list',
+          PassengerListOrdersView,
+          name='list_orders')
 ]

@@ -57,5 +57,18 @@ class CurrentOrderSerializer(serializers.Serializer):
                                          max_digits=6,
                                          decimal_places=2)
 
-    def create(self, validated_data):
-        return {}
+
+class ListOrderSerializer(serializers.Serializer):
+    driver = serializers.RelatedField(read_only=True)
+    passenger_lat = serializers.FloatField(read_only=True)
+    passenger_long = serializers.FloatField(read_only=True)
+
+    start_POI_name = serializers.CharField(read_only=True, max_length=150)
+    start_POI_address = serializers.CharField(read_only=True, max_length=150)
+    start_POI_lat = serializers.FloatField(read_only=True)
+    start_POI_long = serializers.FloatField(read_only=True)
+
+    end_POI_name = serializers.CharField(read_only=True, max_length=150)
+    end_POI_address = serializers.CharField(read_only=True, max_length=150)
+    end_POI_lat = serializers.FloatField(read_only=True)
+    end_POI_long = serializers.FloatField(read_only=True)

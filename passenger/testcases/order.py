@@ -73,27 +73,28 @@ class PassengerEstimatePriceTest(TestCase):
 class PassengerCreateOrderTest(TestCase):
     def setUp(self):
         access_token, refresh_token, status_code = authenticate(self)
-        past_order = Order.objects.create(
-            passenger=Passenger.objects.get(id=1),
-            start_POI_name="清华大学",
-            start_POI_address="北京市海淀区双清路30号",
-            start_POI_lat=39.99970025463166,
-            start_POI_long=116.32636879642432,
-            end_POI_name="故宫博物院",
-            end_POI_address="中国北京市东城区景山前街4号",
-            end_POI_lat=39.9136172322172,
-            end_POI_long=116.39729231302886,
-            passenger_lat=39.99970025463166,
-            passenger_long=116.32636879642432,
-            est_price=est_price(
-                39.99970025463166,
-                116.32636879642432,
-                39.9136172322172,
-                116.39729231302886
-            ),
-            status=1,
-            updated_at=timezone.now() - timedelta(minutes=5)
-        )
+        for x in range(0, 100):
+            Order.objects.create(
+                passenger=Passenger.objects.get(id=1),
+                start_POI_name=f"清华大学{x}",
+                start_POI_address="北京市海淀区双清路30号",
+                start_POI_lat=39.99970025463166,
+                start_POI_long=116.32636879642432,
+                end_POI_name="故宫博物院",
+                end_POI_address="中国北京市东城区景山前街4号",
+                end_POI_lat=39.9136172322172,
+                end_POI_long=116.39729231302886,
+                passenger_lat=39.99970025463166,
+                passenger_long=116.32636879642432,
+                est_price=est_price(
+                    39.99970025463166,
+                    116.32636879642432,
+                    39.9136172322172,
+                    116.39729231302886
+                ),
+                status=1,
+                updated_at=timezone.now() - timedelta(minutes=5)
+            )
 
     def test_create_order(self):
         access_token, refresh_token, status_code = authenticate(self)
@@ -292,3 +293,20 @@ class PassengerCreateOrderTest(TestCase):
             **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
         )
         self.assertEqual(response.status_code, 400)
+
+    def test_list_orders(self):
+        access_token, refresh_token, status_code = authenticate(self)
+        self.assertEqual(status_code, 200)
+
+        response = self.client.get(
+            '/api/passenger/order/list?offset=10&limit=20',
+            content_type='application/json',
+            **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
+        )
+        self.assertEqual(response.status_code, 200)
+
+        for x in range(0, 20):
+            self.assertEqual(
+                response.data[x]['start_POI_name'],
+                f'清华大学{x + 10}'
+            )
