@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from order.models import Order
-from passenger.views.utils import *
 from passenger.models import Passenger
+from passenger.views.utils import *
 from django.utils import timezone
 
 
