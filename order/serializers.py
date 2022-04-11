@@ -5,7 +5,7 @@ from passenger.views.utils import *
 from django.utils import timezone
 
 
-class NewOrderSerializer(serializers.Serializer):
+class PassengerNewOrderSerializer(serializers.Serializer):
     passenger_lat = serializers.FloatField(required=True)
     passenger_long = serializers.FloatField(required=True)
 
