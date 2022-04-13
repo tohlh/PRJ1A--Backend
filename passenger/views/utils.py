@@ -9,7 +9,7 @@ from django.db.models import Q
 
 
 # Passenger Authentication
-def decode_user_token(request):
+def decode_passenger_token(request):
     encoded_token = request.META.get('HTTP_AUTHORIZATION')[7:]
     decoded_token = jwt.decode(encoded_token,
                                SIMPLE_JWT['SIGNING_KEY'],
@@ -17,15 +17,13 @@ def decode_user_token(request):
     return decoded_token
 
 
-def is_authorized(request):
-    decoded_token = decode_user_token(request)
-    if decoded_token['type'] == 'passenger':
-        return True
-    return False
+def is_passenger(request):
+    decoded_token = decode_passenger_token(request)
+    return decoded_token['type'] == 'passenger'
 
 
 def get_passenger_id(request):
-    decoded_token = decode_user_token(request)
+    decoded_token = decode_passenger_token(request)
     return decoded_token['user_id']
 
 
@@ -37,10 +35,7 @@ def pending_order_exists(passenger_id):
         passenger__id=passenger_id,
         updated_at__gt=time_threshold
     )
-    if pending_order.exists():
-        return True
-    else:
-        return False
+    return pending_order.exists()
 
 
 def get_current_order(passenger_id):

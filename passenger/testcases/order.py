@@ -16,10 +16,18 @@ class PassengerEstimatePriceTest(TestCase):
         self.assertEqual(status_code, 200)
 
         payload = {
-            'start_POI_lat': '39.99970025463166',
-            'start_POI_long': '116.32636879642432',
-            'end_POI_lat': '39.9136172322172',
-            'end_POI_long': '116.39729231302886'
+            'start': {
+                'name': '清华大学',
+                'address': '北京市海淀区双清路30号',
+                'latitude': '39.99970025463166',
+                'longitude': '116.32636879642432',
+            },
+            'end': {
+                'name': '故宫博物院',
+                'address': '中国北京市东城区景山前街4号',
+                'latitude': '39.9136172322172',
+                'longitude': '116.39729231302886'
+            }
         }
         response = self.client.post(
             '/api/passenger/order/est-price',
@@ -32,10 +40,18 @@ class PassengerEstimatePriceTest(TestCase):
     def test_invalid_est_price(self):
         # not authenticated
         payload = {
-            'start_POI_lat': '39.99970025463166',
-            'start_POI_long': '116.32636879642432',
-            'end_POI_lat': '39.9136172322172',
-            'end_POI_long': '116.39729231302886'
+            'start': {
+                'name': '清华大学',
+                'address': '北京市海淀区双清路30号',
+                'latitude': '39.99970025463166',
+                'longitude': '116.32636879642432',
+            },
+            'end': {
+                'name': '故宫博物院',
+                'address': '中国北京市东城区景山前街4号',
+                'latitude': '39.9136172322172',
+                'longitude': '116.39729231302886'
+            }
         }
         response = self.client.post(
             '/api/passenger/order/est-price',
@@ -55,19 +71,6 @@ class PassengerEstimatePriceTest(TestCase):
             **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
         )
         self.assertEqual(response.status_code, 405)
-
-        # invalid payload
-        payload = {
-            'start_POI_lat': '39.99970025463166',
-            'star_POI_long': '116.32636879642432',
-        }
-        response = self.client.post(
-            '/api/passenger/order/est-price',
-            data=payload,
-            content_type='application/json',
-            **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
-        )
-        self.assertEqual(response.status_code, 400)
 
 
 class PassengerCreateOrderTest(TestCase):
@@ -101,16 +104,18 @@ class PassengerCreateOrderTest(TestCase):
         self.assertEqual(status_code, 200)
 
         payload = {
-            "start_POI_name": "清华大学",
-            "start_POI_address": "北京市海淀区双清路30号",
-            "start_POI_lat": "39.99970025463166",
-            "start_POI_long": "116.32636879642432",
-            "end_POI_name": "故宫博物院",
-            "end_POI_address": "中国北京市东城区景山前街4号",
-            "end_POI_lat": "39.9136172322172",
-            "end_POI_long": "116.39729231302886",
-            "passenger_lat": "39.99970025463166",
-            "passenger_long": "116.32636879642432"
+            "start": {
+                "name": "清华大学",
+                "address": "北京市海淀区双清路30号",
+                "latitude": "39.99970025463166",
+                "longitude": "116.32636879642432"
+            },
+            "end": {
+                "name": "故宫博物院",
+                "address": "中国北京市东城区景山前街4号",
+                "latitude": "39.9136172322172",
+                "longitude": "116.39729231302886",
+            }
         }
         response = self.client.post(
             '/api/passenger/order/new',
@@ -125,16 +130,18 @@ class PassengerCreateOrderTest(TestCase):
         self.assertEqual(status_code, 200)
 
         payload = {
-            "start_POI_name": "清华大学",
-            "start_POI_address": "北京市海淀区双清路30号",
-            "start_POI_lat": "39.99970025463166",
-            "start_POI_long": "116.32636879642432",
-            "end_POI_name": "故宫博物院",
-            "end_POI_address": "中国北京市东城区景山前街4号",
-            "end_POI_lat": "39.9136172322172",
-            "end_POI_long": "116.39729231302886",
-            "passenger_lat": "39.99970025463166",
-            "passenger_long": "116.32636879642432"
+            "start": {
+                "name": "清华大学",
+                "address": "北京市海淀区双清路30号",
+                "latitude": "39.99970025463166",
+                "longitude": "116.32636879642432"
+            },
+            "end": {
+                "name": "故宫博物院",
+                "address": "中国北京市东城区景山前街4号",
+                "latitude": "39.9136172322172",
+                "longitude": "116.39729231302886",
+            }
         }
         response = self.client.post(
             '/api/passenger/order/new',
@@ -151,7 +158,8 @@ class PassengerCreateOrderTest(TestCase):
             content_type='application/json',
             **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
         )
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, {})
 
     def test_get_current_order(self):
         access_token, refresh_token, status_code = authenticate(self)
@@ -163,19 +171,22 @@ class PassengerCreateOrderTest(TestCase):
             content_type='application/json',
             **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
         )
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, {})
 
         payload = {
-            "start_POI_name": "清华大学",
-            "start_POI_address": "北京市海淀区双清路30号",
-            "start_POI_lat": "39.99970025463166",
-            "start_POI_long": "116.32636879642432",
-            "end_POI_name": "故宫博物院",
-            "end_POI_address": "中国北京市东城区景山前街4号",
-            "end_POI_lat": "39.9136172322172",
-            "end_POI_long": "116.39729231302886",
-            "passenger_lat": "39.99970025463166",
-            "passenger_long": "116.32636879642432"
+            "start": {
+                "name": "清华大学",
+                "address": "北京市海淀区双清路30号",
+                "latitude": "39.99970025463166",
+                "longitude": "116.32636879642432"
+            },
+            "end": {
+                "name": "故宫博物院",
+                "address": "中国北京市东城区景山前街4号",
+                "latitude": "39.9136172322172",
+                "longitude": "116.39729231302886",
+            }
         }
 
         # Add a new order
@@ -200,16 +211,18 @@ class PassengerCreateOrderTest(TestCase):
         self.assertEqual(status_code, 200)
 
         payload = {
-            "start_POI_name": "清华大学",
-            "start_POI_address": "北京市海淀区双清路30号",
-            "start_POI_lat": "39.99970025463166",
-            "start_POI_long": "116.32636879642432",
-            "end_POI_name": "故宫博物院",
-            "end_POI_address": "中国北京市东城区景山前街4号",
-            "end_POI_lat": "39.9136172322172",
-            "end_POI_long": "116.39729231302886",
-            "passenger_lat": "39.99970025463166",
-            "passenger_long": "116.32636879642432"
+            "start": {
+                "name": "清华大学",
+                "address": "北京市海淀区双清路30号",
+                "latitude": "39.99970025463166",
+                "longitude": "116.32636879642432"
+            },
+            "end": {
+                "name": "故宫博物院",
+                "address": "中国北京市东城区景山前街4号",
+                "latitude": "39.9136172322172",
+                "longitude": "116.39729231302886",
+            }
         }
 
         # Add a new order
@@ -222,13 +235,14 @@ class PassengerCreateOrderTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
         # Cancel the order
-        response = self.client.get(
+        response = self.client.post(
             '/api/passenger/order/cancel',
             data=payload,
             content_type='application/json',
             **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
         )
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, {})
 
         # Check for the current order
         response = self.client.get(
@@ -236,23 +250,26 @@ class PassengerCreateOrderTest(TestCase):
             content_type='application/json',
             **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
         )
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, {})
 
     def test_update_location(self):
         access_token, refresh_token, status_code = authenticate(self)
         self.assertEqual(status_code, 200)
 
         payload = {
-            "start_POI_name": "清华大学",
-            "start_POI_address": "北京市海淀区双清路30号",
-            "start_POI_lat": "39.99970025463166",
-            "start_POI_long": "116.32636879642432",
-            "end_POI_name": "故宫博物院",
-            "end_POI_address": "中国北京市东城区景山前街4号",
-            "end_POI_lat": "39.9136172322172",
-            "end_POI_long": "116.39729231302886",
-            "passenger_lat": "39.99970025463166",
-            "passenger_long": "116.32636879642432"
+            "start": {
+                "name": "清华大学",
+                "address": "北京市海淀区双清路30号",
+                "latitude": "39.99970025463166",
+                "longitude": "116.32636879642432"
+            },
+            "end": {
+                "name": "故宫博物院",
+                "address": "中国北京市东城区景山前街4号",
+                "latitude": "39.9136172322172",
+                "longitude": "116.39729231302886",
+            }
         }
 
         # Add a new order
@@ -266,8 +283,8 @@ class PassengerCreateOrderTest(TestCase):
 
         # Update location
         payload = {
-            "passenger_lat": 39.99970025463180,
-            "passenger_long": 116.32636879642432
+            "latitude": 39.99970025463180,
+            "longitude": 116.32636879642432
         }
         response = self.client.post(
             '/api/passenger/order/update-location',
@@ -276,23 +293,7 @@ class PassengerCreateOrderTest(TestCase):
             **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data['passenger_lat'],
-                         payload['passenger_lat'])
-        self.assertEqual(response.data['passenger_long'],
-                         payload['passenger_long'])
-
-        # Invalid keys
-        payload = {
-            "lat": 39.99970025463180,
-            "long": 116.32636879642432
-        }
-        response = self.client.post(
-            '/api/passenger/order/update-location',
-            data=payload,
-            content_type='application/json',
-            **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
-        )
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.data, payload)
 
     def test_list_orders(self):
         access_token, refresh_token, status_code = authenticate(self)
@@ -307,6 +308,6 @@ class PassengerCreateOrderTest(TestCase):
 
         for x in range(0, 20):
             self.assertEqual(
-                response.data[x]['start_POI_name'],
-                f'清华大学{x + 10}'
+                response.data[x]['start']['name'],
+                f'清华大学{89 - x}'
             )
