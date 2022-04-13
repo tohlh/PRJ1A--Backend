@@ -39,8 +39,7 @@ def pending_order_exists(passenger_id):
     )
     if pending_order.exists():
         return True
-    else:
-        return False
+    return False
 
 
 def get_current_order(passenger_id):
