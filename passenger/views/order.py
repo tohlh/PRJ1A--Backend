@@ -1,3 +1,4 @@
+from passenger.models import *
 from passenger.views.utils import *
 from passenger.serializers import *
 from rest_framework.decorators import api_view

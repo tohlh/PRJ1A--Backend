@@ -308,5 +308,5 @@ class PassengerCreateOrderTest(TestCase):
         for x in range(0, 20):
             self.assertEqual(
                 response.data[x]['start_POI_name'],
-                f'清华大学{x + 10}'
+                f'清华大学{89 - x}'
             )
