@@ -35,7 +35,7 @@ class PassengerNewOrderSerializer(serializers.Serializer):
     def create(self, validated_data):
         passenger_id = self.context.get('passenger_id')
         validated_data['passenger'] = Passenger.objects.get(id=passenger_id)
-        validated_data['status'] = 1
+        validated_data['status'] = 0
         validated_data['est_price'] = est_price(
             validated_data['start_POI_lat'],
             validated_data['start_POI_long'],
