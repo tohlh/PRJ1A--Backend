@@ -73,8 +73,7 @@ def PassengerNewOrderView(request):
         status=0
     )
 
-    serializer = PassengerOrderSerializer(new_order)
-    return payload_response(serializer.data)
+    return payload_response({})
 
 
 @api_view(('GET',))
@@ -85,7 +84,8 @@ def PassengerCurrentOrderView(request):
     passenger_id = get_passenger_id(request)
 
     if not pending_order_exists(passenger_id):
-        return bad_request_response({})
+        serializer = PassengerOrderSerializer({})
+        return payload_response(None)
 
     order = get_current_order(passenger_id)
     serializer = PassengerOrderSerializer(order)

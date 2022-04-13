@@ -171,8 +171,7 @@ class PassengerCreateOrderTest(TestCase):
             content_type='application/json',
             **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.data, {})
+        self.assertEqual(response.status_code, 200)
 
         payload = {
             "start": {
@@ -250,8 +249,7 @@ class PassengerCreateOrderTest(TestCase):
             content_type='application/json',
             **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.data, {})
+        self.assertEqual(response.status_code, 200)
 
     def test_update_location(self):
         access_token, refresh_token, status_code = authenticate(self)
