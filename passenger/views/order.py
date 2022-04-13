@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 @api_view(('POST',))
 def PassengerEstimatePriceView(request):
     permission_classes = (IsAuthenticated,)
-    if not is_authorized(request):
+    if not is_passenger(request):
         return unauthorized_response()
     passenger_id = get_passenger_id(request)
 
@@ -33,7 +33,7 @@ def PassengerEstimatePriceView(request):
 def PassengerNewOrderView(request):
     # Places an order and record the order into the database
     permission_classes = (IsAuthenticated,)
-    if not is_authorized(request):
+    if not is_passenger(request):
         return unauthorized_response()
     passenger_id = get_passenger_id(request)
 
@@ -53,7 +53,7 @@ def PassengerNewOrderView(request):
 @api_view(('GET',))
 def PassengerCurrentOrderView(request):
     permission_classes = (IsAuthenticated,)
-    if not is_authorized(request):
+    if not is_passenger(request):
         return unauthorized_response()
     passenger_id = get_passenger_id(request)
 
@@ -74,7 +74,7 @@ def PassengerCurrentOrderView(request):
 @api_view(('GET',))
 def PassengerCancelOrderView(request):
     permission_classes = (IsAuthenticated,)
-    if not is_authorized(request):
+    if not is_passenger(request):
         return unauthorized_response()
     passenger_id = get_passenger_id(request)
 
@@ -87,7 +87,7 @@ def PassengerCancelOrderView(request):
 @api_view(('POST',))
 def PassengerUpdateLocationView(request):
     permission_classes = (IsAuthenticated,)
-    if not is_authorized(request):
+    if not is_passenger(request):
         return unauthorized_response()
     passenger_id = get_passenger_id(request)
 
@@ -117,7 +117,7 @@ def PassengerUpdateLocationView(request):
 @api_view(('GET',))
 def PassengerListOrdersView(request):
     permission_classes = (IsAuthenticated,)
-    if not is_authorized(request):
+    if not is_passenger(request):
         return unauthorized_response()
     passenger_id = get_passenger_id(request)
 
