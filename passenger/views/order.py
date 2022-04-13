@@ -1,6 +1,5 @@
 from passenger.views.utils import *
 from passenger.serializers import *
-from django.forms import model_to_dict
 from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 
@@ -73,13 +72,8 @@ def PassengerCurrentOrderView(request):
         return bad_request_response('You do not have an active order.')
 
     order = get_current_order(passenger_id)
-    order = model_to_dict(order)
-    serializer = PassengerOrderSerializer(
-        data=order
-    )
-    if serializer.is_valid():
-        return payload_response(serializer.data)
-    return Response(serializer.errors, status=400)
+    serializer = PassengerOrderSerializer(order)
+    return payload_response(serializer.data)
 
 
 @api_view(('GET',))
@@ -116,13 +110,8 @@ def PassengerUpdateLocationView(request):
                     data['passenger_lat'],
                     data['passenger_long'])
     order = get_current_order(passenger_id)
-    order = model_to_dict(order)
-    serializer = PassengerOrderSerializer(
-        data=order
-    )
-    if serializer.is_valid():
-        return payload_response(serializer.data)
-    return Response(serializer.errors, status=400)
+    serializer = PassengerOrderSerializer(order)
+    return payload_response(serializer.data)
 
 
 @api_view(('GET',))
@@ -137,13 +126,10 @@ def PassengerListOrdersView(request):
 
     orders = Order.objects.filter(
         passenger__id=passenger_id
-    )
-    orders = [model_to_dict(x) for x in orders]
+    ).order_by('-created_at')
     orders = orders[offset:offset+limit]
     serializer = PassengerOrderSerializer(
-        data=orders,
+        orders,
         many=True
     )
-    if serializer.is_valid():
-        return payload_response(serializer.data)
-    return Response(serializer.errors, status=400)
+    return payload_response(serializer.data)
