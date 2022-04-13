@@ -31,7 +31,7 @@ class Order(models.Model):
     real_price = models.DecimalField(default='0', max_digits=6, decimal_places=2)
 
     # Only used before the driver picks up the passenger
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField()
     updated_at = models.DateTimeField()
     
     # After the order is fulfilled
