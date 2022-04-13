@@ -1,14 +1,35 @@
+from driver.models import Driver
 from rest_framework import serializers
 from order.models import Order
+from driver.models import Driver
 from passenger.views.utils import *
 
 
+class StartPointSerializer(serializers.Serializer):
+    name = serializers.CharField(source='start_POI_name', max_length=150)
+    address = serializers.CharField(source='start_POI_address', max_length=150)
+    latitude = serializers.FloatField(source='start_POI_lat')
+    longitude = serializers.FloatField(source='start_POI_long')
+
+
+class EndPointSerializer(serializers.Serializer):
+    name = serializers.CharField(source='end_POI_name', max_length=150)
+    address = serializers.CharField(source='end_POI_address', max_length=150)
+    latitude = serializers.FloatField(source='end_POI_lat')
+    longitude = serializers.FloatField(source='end_POI_long')
+
+
+class DriverInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Driver
+        fields = ['carplate', 'phone']
+
+
 class PassengerOrderSerializer(serializers.ModelSerializer):
+    start = StartPointSerializer(source='*')
+    end = EndPointSerializer(source='*')
+    driver = DriverInfoSerializer()
+
     class Meta:
         model = Order
-        fields = ['id', 'driver', 'passenger',
-                  'passenger_lat', 'passenger_long',
-                  'start_POI_name', 'start_POI_address', 'start_POI_lat',
-                  'start_POI_long', 'end_POI_name', 'end_POI_address',
-                  'end_POI_lat', 'end_POI_long', 'est_price', 'status',
-                  'updated_at', 'created_at']
+        fields = ['start', 'end', 'id', 'driver', 'distance']
