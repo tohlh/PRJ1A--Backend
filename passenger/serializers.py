@@ -9,9 +9,9 @@ class PassengerOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ['driver', 'passenger_lat', 'passenger_long',
-                  'start_POI_name', 'start_POI_address', 'start_POI_lat', 'start_POI_long',
-                  'end_POI_name', 'end_POI_address', 'end_POI_lat', 'end_POI_long',
-                  'est_price', 'status']
+                  'start_POI_name', 'start_POI_address', 'start_POI_lat',
+                  'start_POI_long', 'end_POI_name', 'end_POI_address',
+                  'end_POI_lat', 'end_POI_long', 'est_price', 'status']
 
 
 class PassengerNewOrderSerializer(serializers.Serializer):
