@@ -42,7 +42,7 @@ def PassengerNewOrderView(request):
 
     serializer = PassengerNewOrderSerializer(
         data=request.data,
-        context={'request': request}
+        context={'passenger_id': passenger_id}
     )
     if serializer.is_valid():
         serializer.save()
@@ -63,8 +63,7 @@ def PassengerCurrentOrderView(request):
     order = get_current_order(passenger_id)
     order = model_to_dict(order)
     serializer = PassengerOrderSerializer(
-        data=order,
-        context={'request': request}
+        data=order
     )
     if serializer.is_valid():
         return payload_response(serializer.data)
@@ -106,8 +105,7 @@ def PassengerUpdateLocationView(request):
     order = get_current_order(passenger_id)
     order = model_to_dict(order)
     serializer = PassengerOrderSerializer(
-        data=order,
-        context={'request': request}
+        data=order
     )
     if serializer.is_valid():
         return payload_response(serializer.data)

@@ -33,8 +33,7 @@ class PassengerNewOrderSerializer(serializers.Serializer):
                                          decimal_places=2)
 
     def create(self, validated_data):
-        request = self.context.get('request')
-        passenger_id = get_passenger_id(request)
+        passenger_id = self.context.get('passenger_id')
         validated_data['passenger'] = Passenger.objects.get(id=passenger_id)
         validated_data['status'] = 1
         validated_data['est_price'] = est_price(
