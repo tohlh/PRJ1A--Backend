@@ -40,8 +40,20 @@ def PassengerNewOrderView(request):
     if pending_order_exists(passenger_id):
         return bad_request_response('There is already an active order.')
 
-    serializer = PassengerNewOrderSerializer(
-        data=request.data,
+    new_order = request.data
+    new_order['passenger'] = Passenger.objects.get(
+        id=passenger_id
+    ).id
+    new_order['est_price'] = est_price(
+        float(new_order['start_POI_lat']),
+        float(new_order['start_POI_long']),
+        float(new_order['end_POI_lat']),
+        float(new_order['end_POI_long'])
+    )
+    new_order['updated_at'] = timezone.now()
+    new_order['status'] = 0
+    serializer = PassengerOrderSerializer(
+        data=new_order,
         context={'passenger_id': passenger_id}
     )
     if serializer.is_valid():
@@ -77,8 +89,9 @@ def PassengerCancelOrderView(request):
         return unauthorized_response()
     passenger_id = get_passenger_id(request)
 
-    if pending_order_exists(passenger_id):
-        cancel_current_order(passenger_id)
+    if not pending_order_exists(passenger_id):
+        return bad_request_response('You do not have an active order.')
+    cancel_current_order(passenger_id)
 
     return payload_response({})
 
