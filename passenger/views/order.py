@@ -50,11 +50,11 @@ def PassengerNewOrderView(request):
         float(new_order['end_POI_lat']),
         float(new_order['end_POI_long'])
     )
+    new_order['created_at'] = timezone.now()
     new_order['updated_at'] = timezone.now()
     new_order['status'] = 0
     serializer = PassengerOrderSerializer(
-        data=new_order,
-        context={'passenger_id': passenger_id}
+        data=new_order
     )
     if serializer.is_valid():
         serializer.save()
