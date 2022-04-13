@@ -1,5 +1,5 @@
 from passenger.views.utils import *
-from order.serializers import *
+from passenger.serializers import *
 from django.forms import model_to_dict
 from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
