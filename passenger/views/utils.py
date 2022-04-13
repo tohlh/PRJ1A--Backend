@@ -19,9 +19,7 @@ def decode_passenger_token(request):
 
 def is_passenger(request):
     decoded_token = decode_passenger_token(request)
-    if decoded_token['type'] == 'passenger':
-        return True
-    return False
+    return decoded_token['type'] == 'passenger'
 
 
 def get_passenger_id(request):
@@ -37,9 +35,7 @@ def pending_order_exists(passenger_id):
         passenger__id=passenger_id,
         updated_at__gt=time_threshold
     )
-    if pending_order.exists():
-        return True
-    return False
+    return pending_order.exists()
 
 
 def get_current_order(passenger_id):
