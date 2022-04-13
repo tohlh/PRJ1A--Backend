@@ -93,10 +93,8 @@ def payload_response(payload):
     return Response(payload, 200)
 
 
-def bad_request_response(message):
-    return Response({
-        'response': message
-    }, 400)
+def bad_request_response(payload):
+    return Response(payload, 400)
 
 
 def unauthorized_response():
