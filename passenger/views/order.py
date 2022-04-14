@@ -98,6 +98,11 @@ def PassengerCancelOrderView(request):
     if not is_passenger(request):
         return unauthorized_response()
     passenger_id = get_passenger_id(request)
+
+    if not pending_order_exists(passenger_id):
+        serializer = PassengerOrderSerializer({})
+        return bad_request_response({})
+
     cancel_current_order(passenger_id)
     return payload_response({})
 
