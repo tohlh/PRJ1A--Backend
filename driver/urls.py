@@ -25,4 +25,7 @@ urlpatterns = [
      path('order/update-location',
           DriverUpdateLocationView,
           name='update_location'),
+     path('order/get',
+          DriverGetOrderView,
+          name='get_order')
 ]
