@@ -11,6 +11,7 @@ python-decouple = "*"
 pycodestyle = "*"
 requests = "*"
 pyjwt = "*"
+coverage = "*"
 
 [dev-packages]
 
