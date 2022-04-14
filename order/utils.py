@@ -59,5 +59,8 @@ def match_orders():
                                          driver_lat, driver_long)
 
             if dist_between <= 15:
-                Order.objects.filter(id=order.id).update(driver=driver)
+                Order.objects.filter(id=order.id).update(
+                    driver=driver,
+                    status=1
+                )
                 break
