@@ -7,7 +7,7 @@ from driver.views.utils import *
 @api_view(('GET', 'POST'))
 def DriverInfoView(request):
     permission_classes = (IsAuthenticated,)
-    if not is_authorized(request):
+    if not is_driver(request):
         return unauthorized_response()
     driver_id = get_driver_id(request)
 
