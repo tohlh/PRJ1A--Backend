@@ -51,7 +51,7 @@ def PassengerNewOrderView(request):
         return bad_request_response({})
 
     data = request.data
-    new_order = Order.objects.create(
+    Order.objects.create(
         passenger=Passenger.objects.get(id=passenger_id),
         start_POI_name=data['start']['name'],
         start_POI_address=data['start']['address'],
@@ -67,10 +67,15 @@ def PassengerNewOrderView(request):
             float(data['end']['latitude']),
             float(data['end']['longitude'])
         ),
-        passenger_lat=float(data['start']['latitude']),
-        passenger_long=float(data['start']['longitude']),
         updated_at=timezone.now(),
         status=0
+    )
+
+    Passenger.objects.filter(
+        id=passenger_id
+    ).update(
+        latitude=float(data['start']['latitude']),
+        longitude=float(data['start']['longitude'])
     )
 
     return payload_response({})
@@ -123,9 +128,14 @@ def PassengerUpdateLocationView(request):
         if key not in data:
             return bad_request_response(f'\'{key}\' is required')
 
-    update_location(passenger_id,
-                    data['latitude'],
-                    data['longitude'])
+    update_current_order(passenger_id)
+
+    Passenger.objects.filter(
+        id=passenger_id
+    ).update(
+        latitude=data['latitude'],
+        longitude=data['longitude']
+    )
 
     response = {
         'latitude': data['latitude'],

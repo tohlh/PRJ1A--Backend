@@ -87,8 +87,6 @@ class PassengerCreateOrderTest(TestCase):
                 end_POI_address="中国北京市东城区景山前街4号",
                 end_POI_lat=39.9136172322172,
                 end_POI_long=116.39729231302886,
-                passenger_lat=39.99970025463166,
-                passenger_long=116.32636879642432,
                 est_price=est_price(
                     39.99970025463166,
                     116.32636879642432,
