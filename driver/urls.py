@@ -22,4 +22,7 @@ urlpatterns = [
      path('order/queue',
           DriverQueueOrderView,
           name='queue_order'),
+     path('order/update-location',
+          DriverUpdateLocationView,
+          name='update_location'),
 ]
