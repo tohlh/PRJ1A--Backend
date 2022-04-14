@@ -29,36 +29,6 @@ def get_driver_id(request):
 
 
 # Order
-def pending_order_exists():
-    time_threshold = timezone.now() - timedelta(minutes=2)
-    pending_order = Order.objects.filter(
-        status=0,
-        updated_at__gt=time_threshold
-    )
-    return pending_order.exists()
-
-
-def get_pending_order(driver_id):
-    time_threshold = timezone.now() - timedelta(minutes=2)
-    pending_order_id = Order.objects.filter(
-        status=0,
-        updated_at__gt=time_threshold
-    ).order_by("?").first().id
-
-    accepted_order_id = Order.objects.filter(
-        id=pending_order_id
-    ).update(
-        driver=driver_id,
-        status=1
-    )
-
-    accepted_order = Order.objects.get(
-        id=accepted_order_id
-    )
-
-    return accepted_order
-
-
 def current_order_exists(driver_id):
     time_threshold = timezone.now() - timedelta(minutes=2)
     criteria = (Q(driver__id=driver_id) & Q(status=1) &
