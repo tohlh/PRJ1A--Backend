@@ -27,5 +27,8 @@ urlpatterns = [
           name='update_location'),
      path('order/get',
           DriverGetOrderView,
-          name='get_order')
+          name='get_order'),
+     path('order/pickup',
+          DriverPickupPassengerView,
+          name='pickup_passenger')
 ]

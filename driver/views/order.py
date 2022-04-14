@@ -50,3 +50,22 @@ def DriverGetOrderView(request):
     current_order = get_current_order(driver_id)
     serializer = DriverOrderSerializer(current_order)
     return payload_response(serializer.data)
+
+
+@api_view(('POST',))
+def DriverPickupPassengerView(request):
+    permission_classes = (IsAuthenticated,)
+    if not is_driver(request):
+        return unauthorized_response()
+    driver_id = get_driver_id(request)
+
+    if not current_order_exists(driver_id):
+        return bad_request_response({})
+
+    current_order = get_current_order(driver_id)
+    Order.objects.filter(
+        id=current_order.id
+    ).update(
+        status=2
+    )
+    return payload_response({})
