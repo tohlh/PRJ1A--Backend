@@ -25,9 +25,7 @@ class Order(models.Model):
     before_pickup_path = models.TextField()
     after_pickup_path = models.TextField()
     # Distance based on after_pickup_path
-    distance = models.DecimalField(default='0',
-                                   max_digits=6,
-                                   decimal_places=2)
+    distance = models.FloatField(default='0')
 
     est_price = models.DecimalField(max_digits=6, decimal_places=2)
     real_price = models.DecimalField(default='0',
