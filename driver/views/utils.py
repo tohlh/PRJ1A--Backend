@@ -1,12 +1,14 @@
 import jwt
 import json
 import base64
-from prj1a.settings import SIMPLE_JWT
-from rest_framework.response import Response
-from order.models import Order
+import decimal
 from datetime import timedelta
 from django.utils import timezone
 from django.db.models import Q
+from prj1a.settings import SIMPLE_JWT
+from rest_framework.response import Response
+from order.models import Order
+from order.utils import *
 
 
 # Driver Authentication
@@ -83,12 +85,30 @@ def record_path(driver_id, latitude, longitude):
         if path_list == '':
             path_list = dict_list_to_base64_json([])
         path_list = base64_json_to_dict_list(path_list)
+
+        new_distance = 0
+        if len(path_list) != 0:
+            new_distance = calc_distance(
+                path_list[-1]['latitude'],
+                path_list[-1]['longitude'],
+                new_entry['latitude'],
+                new_entry['longitude']
+            ) + current_order.distance
+        print(path_list[-1]['latitude'])
+
+        new_price = new_distance * 5
+        new_price = str(round(new_price, 2))
+        new_price = decimal.Decimal(new_price)
+        print(new_price)
+
         path_list.append(new_entry)
         encoded_path = dict_list_to_base64_json(path_list)
         Order.objects.filter(
             id=current_order.id
         ).update(
-            after_pickup_path=encoded_path
+            after_pickup_path=encoded_path,
+            distance=new_distance,
+            real_price=new_price
         )
 
 
