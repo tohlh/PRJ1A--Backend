@@ -14,7 +14,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Passenger',
             fields=[
-                ('id', models.PositiveIntegerField(primary_key=True, serialize=False)),
+                ('id', models.PositiveIntegerField(primary_key=True,
+                                                   serialize=False)),
                 ('username', models.CharField(max_length=150)),
                 ('phone', models.CharField(max_length=11)),
                 ('latitude', models.FloatField(blank=True, null=True)),
