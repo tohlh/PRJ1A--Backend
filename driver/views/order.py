@@ -11,3 +11,15 @@ def DriverQueueOrderView(request):
     if not is_driver(request):
         return unauthorized_response()
     return payload_response({})
+
+
+@api_view(('POST',))
+def DriverUpdateLocation(request):
+    permission_classes = (IsAuthenticated,)
+    if not is_driver(request):
+        return unauthorized_response()
+    driver_id = get_driver_id(request)
+    
+    latitude = driver
+
+    return payload_response({})
