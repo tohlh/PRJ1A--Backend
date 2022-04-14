@@ -1,4 +1,3 @@
-from driver.models import Driver
 from rest_framework import serializers
 from order.models import Order
 from driver.models import Driver
