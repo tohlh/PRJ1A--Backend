@@ -35,10 +35,16 @@ unit-test:
   before_script:
     - pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
   script:
-    - python3 manage.py test
+    - coverage run manage.py test
+    - coverage xml
     - UNIT_TEST_RET=$?
     - if [ $UNIT_TEST_RET \> 0 ]; then exit $UNIT_TEST_RET; fi;
     - exit $UNIT_TEST_RET
+  after_script:
+    - SUFFIX=$RANDOM
+    - curl "http://10.0.0.11/sonar-scanner.tar.gz" -s -o "/tmp/sonar-$SUFFIX.tar.gz"
+    - tar -xf "/tmp/sonar-$SUFFIX.tar.gz" -C /opt
+    - /opt/sonar-scanner/bin/sonar-scanner -Dproject.settings=./sonar-projects.properties
 
 deploy:
   stage: deploy
