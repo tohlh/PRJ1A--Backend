@@ -1,9 +1,9 @@
 from datetime import timedelta
 from django.utils import timezone
-from .utils import *
 from order.models import Order
-from passenger.views.utils import est_price
+from order.utils import est_price
 from passenger.models import Passenger
+from passenger.testcases.utils import *
 
 
 class PassengerEstimatePriceTest(TestCase):

@@ -1,6 +1,7 @@
 from passenger.models import *
 from passenger.views.utils import *
 from passenger.serializers import *
+from order.utils import *
 from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 
@@ -136,6 +137,7 @@ def PassengerUpdateLocationView(request):
         latitude=data['latitude'],
         longitude=data['longitude']
     )
+    match_orders()
 
     response = {
         'latitude': data['latitude'],

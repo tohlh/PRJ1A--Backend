@@ -1,5 +1,6 @@
 from driver.models import *
 from driver.views.utils import *
+from order.utils import *
 from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 
@@ -30,5 +31,5 @@ def DriverUpdateLocationView(request):
         longitude=longitude,
         last_online=timezone.now()
     )
-
+    match_orders()
     return payload_response({})
