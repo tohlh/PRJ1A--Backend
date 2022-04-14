@@ -1,10 +1,7 @@
-from .views.info import DriverInfoView
 from django.urls import path
-from driver.auth import (
-    DriverTokenObtainPairView,
-    DriverTokenRefreshView,
-    DriverTokenVerifyView,
-)
+from driver.auth import *
+from driver.views.info import *
+from driver.views.order import *
 
 urlpatterns = [
      # driver's tokens
@@ -21,4 +18,8 @@ urlpatterns = [
      path('info',
           DriverInfoView,
           name='driver_info'),
+     # order
+     path('order/queue',
+          DriverQueueOrderView,
+          name='queue_order'),
 ]
