@@ -30,7 +30,17 @@ def get_passenger_id(request):
 def pending_order_exists(passenger_id):
     time_threshold = timezone.now() - timedelta(minutes=2)
     pending_order = Order.objects.filter(
-        Q(status=0) | Q(status=1),
+        status=0,
+        passenger__id=passenger_id,
+        updated_at__gt=time_threshold
+    )
+    return pending_order.exists()
+
+
+def current_order_exists(passenger_id):
+    time_threshold = timezone.now() - timedelta(minutes=2)
+    pending_order = Order.objects.filter(
+        Q(status=1) | Q(status=2),
         passenger__id=passenger_id,
         updated_at__gt=time_threshold
     )

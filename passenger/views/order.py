@@ -48,7 +48,8 @@ def PassengerNewOrderView(request):
         return unauthorized_response()
     passenger_id = get_passenger_id(request)
 
-    if pending_order_exists(passenger_id):
+    if pending_order_exists(passenger_id) or \
+       current_order_exists(passenger_id):
         return bad_request_response({})
 
     data = request.data
@@ -89,8 +90,8 @@ def PassengerCurrentOrderView(request):
         return unauthorized_response()
     passenger_id = get_passenger_id(request)
 
-    if not pending_order_exists(passenger_id):
-        serializer = PassengerOrderSerializer({})
+    if not (pending_order_exists(passenger_id) or
+            current_order_exists(passenger_id)):
         return payload_response(None)
 
     order = get_current_order(passenger_id)
@@ -105,8 +106,8 @@ def PassengerCancelOrderView(request):
         return unauthorized_response()
     passenger_id = get_passenger_id(request)
 
-    if not pending_order_exists(passenger_id):
-        serializer = PassengerOrderSerializer({})
+    if not (pending_order_exists(passenger_id) or
+            current_order_exists(passenger_id)):
         return bad_request_response({})
 
     cancel_current_order(passenger_id)
@@ -120,7 +121,8 @@ def PassengerUpdateLocationView(request):
         return unauthorized_response()
     passenger_id = get_passenger_id(request)
 
-    if not pending_order_exists(passenger_id):
+    if not (pending_order_exists(passenger_id) or
+            current_order_exists(passenger_id)):
         return bad_request_response({})
 
     data = request.data
@@ -130,7 +132,6 @@ def PassengerUpdateLocationView(request):
             return bad_request_response(f'\'{key}\' is required')
 
     update_current_order(passenger_id)
-
     Passenger.objects.filter(
         id=passenger_id
     ).update(
@@ -139,9 +140,14 @@ def PassengerUpdateLocationView(request):
     )
     match_orders()
 
+    if not current_order_exists(passenger_id):
+        return payload_response({})
+
+    current_order = get_current_order(passenger_id)
+    driver = current_order.driver
     response = {
-        'latitude': data['latitude'],
-        'longitude': data['longitude']
+        'latitude': driver.latitude,
+        'longitude': driver.longitude
     }
     return payload_response(response)
 
