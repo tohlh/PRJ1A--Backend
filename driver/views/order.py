@@ -1,7 +1,5 @@
-from lib2to3.pgen2 import driver
 from driver.models import *
 from driver.views.utils import *
-from driver.serializers import *
 from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 
