@@ -32,4 +32,5 @@ def DriverUpdateLocationView(request):
         last_online=timezone.now()
     )
     match_orders()
+    record_path(driver_id, latitude, longitude)
     return payload_response({})

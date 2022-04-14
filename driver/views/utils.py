@@ -1,4 +1,6 @@
 import jwt
+import json
+import base64
 from prj1a.settings import SIMPLE_JWT
 from rest_framework.response import Response
 from order.models import Order
@@ -43,6 +45,51 @@ def get_current_order(driver_id):
                 Q(updated_at__gt=time_threshold)) | Q(status=2)
     current_order = Order.objects.get(criteria)
     return current_order
+
+
+def dict_list_to_base64_json(dict_list):
+    json_str = json.dumps(dict_list).encode('utf-8')
+    return base64.b64encode(json_str).decode('utf-8')
+
+
+def base64_json_to_dict_list(base64_str):
+    decoded_json_string = base64.b64decode(base64_str)
+    return json.loads(decoded_json_string)
+
+
+def record_path(driver_id, latitude, longitude):
+    if not current_order_exists(driver_id):
+        return
+
+    current_order = get_current_order(driver_id)
+    new_entry = {
+        'latitude': float(latitude),
+        'longitude': float(longitude)
+    }
+    if current_order.status == 1:
+        path_list = current_order.before_pickup_path
+        if path_list == '':
+            path_list = dict_list_to_base64_json([])
+        path_list = base64_json_to_dict_list(path_list)
+        path_list.append(new_entry)
+        encoded_path = dict_list_to_base64_json(path_list)
+        Order.objects.filter(
+            id=current_order.id
+        ).update(
+            before_pickup_path=encoded_path
+        )
+    elif current_order.status == 2:
+        path_list = current_order.after_pickup_path
+        if path_list == '':
+            path_list = dict_list_to_base64_json([])
+        path_list = base64_json_to_dict_list(path_list)
+        path_list.append(new_entry)
+        encoded_path = dict_list_to_base64_json(path_list)
+        Order.objects.filter(
+            id=current_order.id
+        ).update(
+            after_pickup_path=encoded_path
+        )
 
 
 # Http Responses
