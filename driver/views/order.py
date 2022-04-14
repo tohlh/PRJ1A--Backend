@@ -33,13 +33,4 @@ def DriverUpdateLocationView(request):
         last_online=timezone.now()
     )
 
-    if not current_order_exists(driver_id):
-        return payload_response({})
-
-    current_order = get_current_order(driver_id)
-    passenger_lat = current_order.passenger.latitude
-    passenger_long = current_order.passenger.longitude
-    return payload_response({
-        'latitude': passenger_lat,
-        'longitude': passenger_long
-    })
+    return payload_response({})
