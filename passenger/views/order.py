@@ -115,7 +115,7 @@ def PassengerUpdateLocationView(request):
     passenger_id = get_passenger_id(request)
 
     if not pending_order_exists(passenger_id):
-        return payload_response({})
+        return bad_request_response({})
 
     data = request.data
     keys = ['latitude', 'longitude']
