@@ -48,7 +48,7 @@ def PassengerNewOrderView(request):
     passenger_id = get_passenger_id(request)
 
     if pending_order_exists(passenger_id):
-        return payload_response({})
+        return bad_request_response({})
 
     data = request.data
     new_order = Order.objects.create(
