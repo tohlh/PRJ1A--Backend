@@ -94,12 +94,10 @@ def record_path(driver_id, latitude, longitude):
                 new_entry['latitude'],
                 new_entry['longitude']
             ) + current_order.distance
-        print(path_list[-1]['latitude'])
 
         new_price = new_distance * 5
         new_price = str(round(new_price, 2))
         new_price = decimal.Decimal(new_price)
-        print(new_price)
 
         path_list.append(new_entry)
         encoded_path = dict_list_to_base64_json(path_list)
