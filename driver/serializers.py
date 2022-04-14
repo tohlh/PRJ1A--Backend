@@ -35,7 +35,11 @@ class DriverOrderSerializer(serializers.ModelSerializer):
     end = EndPointSerializer(source='*')
     paths = PathsSerializer(source='*')
     passenger = PassengerInfoSerializer()
+    reward = serializers.DecimalField(source='real_price',
+                                      max_digits=6,
+                                      decimal_places=2)
 
     class Meta:
         model = Order
-        fields = ['start', 'end', 'paths', 'id', 'passenger', 'distance']
+        fields = ['start', 'end', 'paths', 'id',
+                  'passenger', 'distance', 'reward']
