@@ -21,6 +21,8 @@ class DriverInfoTest(TestCase):
             'username': 'updatedUsername',
             'carplate': '京123123',
             'phone': '01234567890',
+            'age': 30,
+            'identification_no': '012345678901233457'
         }
         response = self.client.post(
             '/api/driver/info',

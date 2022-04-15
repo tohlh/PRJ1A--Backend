@@ -16,15 +16,29 @@ def PassengerInfoView(request):
         payload = {
             'username': passenger_object.username,
             'phone': passenger_object.phone,
+            'age': passenger_object.age,
+            'identification_no': passenger_object.identification_no
         }
         return payload_response(payload)
 
     if request.method == 'GET':
         return passenger_info_response(passenger_id)
     elif request.method == 'POST':
+        data = request.data
+        fields = ['username', 'phone',
+                  'age', 'identification_no']
+
+        for field in fields:
+            if field not in data:
+                return bad_request_response({
+                    'ErrMsg': f'{field} is required'
+                })
+
         Passenger.objects.filter(id=passenger_id).update(
-            username=request.data['username'],
-            phone=request.data['phone'],
+            username=data['username'],
+            phone=data['phone'],
+            age=data['age'],
+            identification_no=data['identification_no']
         )
         return passenger_info_response(passenger_id)
 
