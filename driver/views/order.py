@@ -1,3 +1,4 @@
+import driver
 from driver.models import *
 from driver.views.utils import *
 from driver.serializers import *
@@ -34,6 +35,15 @@ def DriverUpdateLocationView(request):
     )
     match_orders()
     record_path(driver_id, latitude, longitude)
+
+    if current_order_exists(driver_id):
+        current_order = get_current_order(driver_id)
+        passenger = current_order.passenger
+        return payload_response({
+            'latitude': passenger.latitude,
+            'longitude': passenger.longitude
+        })
+
     return payload_response({})
 
 
