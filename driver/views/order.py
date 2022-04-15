@@ -55,7 +55,7 @@ def DriverGetOrderView(request):
     driver_id = get_driver_id(request)
 
     if not current_order_exists(driver_id):
-        return bad_request_response({})
+        return payload_response({})
 
     current_order = get_current_order(driver_id)
     serializer = DriverOrderSerializer(current_order)
