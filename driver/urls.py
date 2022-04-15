@@ -30,5 +30,14 @@ urlpatterns = [
           name='get_order'),
      path('order/pickup',
           DriverPickupPassengerView,
-          name='pickup_passenger')
+          name='pickup_passenger'),
+     path('order/cancel',
+          DriverCancelOrderView,
+          name='cancel_order'),
+     path('order/end',
+          DriverEndOrderView,
+          name='end_order'),
+     path('order/list',
+          DriverListOrdersView,
+          name='list_orders')
 ]
