@@ -79,6 +79,7 @@ def PassengerNewOrderView(request):
         latitude=float(data['start']['latitude']),
         longitude=float(data['start']['longitude'])
     )
+    match_orders()
 
     return payload_response({})
 
