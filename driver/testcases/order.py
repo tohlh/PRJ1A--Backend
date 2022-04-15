@@ -1,11 +1,11 @@
 from .utils import *
 
 
-class DriverInfoTest(TestCase):
+class DriverOrderTests(TestCase):
     def setUp(self):
         pass
 
-    def test_get_info(self):
+    def test_queue_order(self):
         access_token, refresh_token, status_code = authenticate(self)
         self.assertEqual(status_code, 200)
         response = self.client.get(
@@ -14,29 +14,24 @@ class DriverInfoTest(TestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-    def test_post_info(self):
+    def test_update_location(self):
         access_token, refresh_token, status_code = authenticate(self)
         self.assertEqual(status_code, 200)
+        response = self.client.get(
+            '/api/driver/info',
+            **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
+        )
+        self.assertEqual(response.status_code, 200)
+
         payload = {
-            'username': 'updatedUsername',
-            'carplate': '京123123',
-            'phone': '01234567890',
-            'age': 30,
-            'identification_no': '012345678901233457'
+            "latitude": 39.99970025463180,
+            "longitude": 116.32636879642432
         }
         response = self.client.post(
-            '/api/driver/info',
+            '/api/driver/order/update-location',
             data=payload,
             content_type='application/json',
             **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(payload, response.data)
-
-        # Get the user info again
-        response = self.client.get(
-            '/api/driver/info',
-            **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(payload, response.data)
+        self.assertEqual(response.data, {})

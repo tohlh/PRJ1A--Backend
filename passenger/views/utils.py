@@ -1,7 +1,6 @@
 import jwt
 from prj1a.settings import SIMPLE_JWT
 from rest_framework.response import Response
-from math import radians, cos, sin, asin, sqrt
 from datetime import timedelta
 from django.utils import timezone
 from order.models import Order
@@ -31,61 +30,76 @@ def get_passenger_id(request):
 def pending_order_exists(passenger_id):
     time_threshold = timezone.now() - timedelta(minutes=2)
     pending_order = Order.objects.filter(
-        Q(status=0) | Q(status=1),
+        status=0,
         passenger__id=passenger_id,
         updated_at__gt=time_threshold
     )
     return pending_order.exists()
 
 
-def get_current_order(passenger_id):
+def current_order_exists(passenger_id):
     time_threshold = timezone.now() - timedelta(minutes=2)
-    pending_order = Order.objects.get(
-        Q(status=0) | Q(status=1),
+    ret1 = Order.objects.filter(
+        status=1,
         passenger__id=passenger_id,
         updated_at__gt=time_threshold
     )
-    return pending_order
+    ret2 = Order.objects.filter(
+        status=2,
+        passenger__id=passenger_id,
+    )
+    return ret1 or ret2
+
+
+def get_current_order(passenger_id):
+    time_threshold = timezone.now() - timedelta(minutes=2)
+    ret = Order.objects.filter(
+        status=0,
+        passenger__id=passenger_id,
+        updated_at__gt=time_threshold
+    )
+    if ret.exists():
+        return ret.first()
+
+    time_threshold = timezone.now() - timedelta(minutes=2)
+    ret = Order.objects.filter(
+        status=1,
+        passenger__id=passenger_id,
+        updated_at__gt=time_threshold
+    )
+    if ret.exists():
+        return ret.first()
+
+    time_threshold = timezone.now() - timedelta(minutes=2)
+    ret = Order.objects.filter(
+        status=2,
+        passenger__id=passenger_id,
+    )
+    if ret.exists():
+        return ret.first()
 
 
 def cancel_current_order(passenger_id):
     time_threshold = timezone.now() - timedelta(minutes=2)
-    pending_order = Order.objects.filter(
+    Order.objects.filter(
         Q(status=0) | Q(status=1),
         passenger__id=passenger_id,
         updated_at__gt=time_threshold
     ).update(status=3)
 
+    Order.objects.filter(
+        status=2,
+        passenger__id=passenger_id,
+    ).update(status=3)
 
-def update_location(passenger_id, lat, long):
+
+def update_current_order(passenger_id):
     time_threshold = timezone.now() - timedelta(minutes=2)
     pending_order = Order.objects.filter(
         Q(status=0) | Q(status=1),
         passenger__id=passenger_id,
         updated_at__gt=time_threshold
-    ).update(passenger_lat=lat,
-             passenger_long=long,
-             updated_at=timezone.now())
-
-
-def calc_distance(lat_1, long_1, lat_2, long_2):
-    lat_1 = radians(lat_1)
-    long_1 = radians(long_1)
-    lat_2 = radians(lat_2)
-    long_2 = radians(long_2)
-
-    d_lat = lat_2 - lat_1
-    d_long = long_2 - long_1
-    a = sin(d_lat / 2)**2 + cos(lat_1) * cos(lat_2) * sin(d_long / 2)**2
-    c = 2 * asin(sqrt(a))
-    r = 6371
-    return(c * r)
-
-
-def est_price(lat_1, long_1, lat_2, long_2):
-    ret = 10 * calc_distance(lat_1, long_1, lat_2, long_2)
-    ret = round(ret, 2)
-    return ret
+    ).update(updated_at=timezone.now())
 
 
 # Http Responses

@@ -1,9 +1,9 @@
 from datetime import timedelta
 from django.utils import timezone
-from .utils import *
 from order.models import Order
-from passenger.views.utils import est_price
+from order.utils import est_price
 from passenger.models import Passenger
+from passenger.testcases.utils import *
 
 
 class PassengerEstimatePriceTest(TestCase):
@@ -87,8 +87,6 @@ class PassengerCreateOrderTest(TestCase):
                 end_POI_address="中国北京市东城区景山前街4号",
                 end_POI_lat=39.9136172322172,
                 end_POI_long=116.39729231302886,
-                passenger_lat=39.99970025463166,
-                passenger_long=116.32636879642432,
                 est_price=est_price(
                     39.99970025463166,
                     116.32636879642432,
@@ -291,7 +289,6 @@ class PassengerCreateOrderTest(TestCase):
             **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data, payload)
 
     def test_list_orders(self):
         access_token, refresh_token, status_code = authenticate(self)

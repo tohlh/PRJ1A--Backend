@@ -7,7 +7,7 @@ from driver.views.utils import *
 @api_view(('GET', 'POST'))
 def DriverInfoView(request):
     permission_classes = (IsAuthenticated,)
-    if not is_authorized(request):
+    if not is_driver(request):
         return unauthorized_response()
     driver_id = get_driver_id(request)
 
@@ -17,16 +17,30 @@ def DriverInfoView(request):
             'username': driver_object.username,
             'carplate': driver_object.carplate,
             'phone': driver_object.phone,
+            'age': driver_object.age,
+            'identification_no': driver_object.identification_no
         }
         return payload_response(payload)
 
     if request.method == 'GET':
         return driver_info_response(driver_id)
     elif request.method == 'POST':
+        data = request.data
+        fields = ['username', 'carplate', 'phone',
+                  'age', 'identification_no']
+
+        for field in fields:
+            if field not in data:
+                return bad_request_response({
+                    'ErrMsg': f'{field} is required'
+                })
+
         Driver.objects.filter(id=driver_id).update(
-            username=request.data['username'],
-            carplate=request.data['carplate'],
-            phone=request.data['phone'],
+            username=data['username'],
+            carplate=data['carplate'],
+            phone=data['phone'],
+            age=data['age'],
+            identification_no=data['identification_no']
         )
         return driver_info_response(driver_id)
 
