@@ -154,7 +154,8 @@ def PassengerUpdateLocationView(request):
     driver = current_order.driver
     response = {
         'latitude': driver.latitude,
-        'longitude': driver.longitude
+        'longitude': driver.longitude,
+        'rotate': 45
     }
     return payload_response(response)
 
