@@ -85,7 +85,7 @@ def PassengerNewOrderView(request):
 
 
 @api_view(('GET',))
-def PassengerCurrentOrderView(request):
+def PassengerGetOrderView(request):
     permission_classes = (IsAuthenticated,)
     if not is_passenger(request):
         return unauthorized_response()
