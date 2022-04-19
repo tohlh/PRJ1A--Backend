@@ -32,7 +32,7 @@ def DriverInfoView(request):
         for field in fields:
             if field not in data:
                 return bad_request_response({
-                    'ErrMsg': f'{field} is required'
+                    'errMsg': f'{field} is required'
                 })
 
         Driver.objects.filter(id=driver_id).update(

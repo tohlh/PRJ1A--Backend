@@ -50,7 +50,9 @@ def PassengerNewOrderView(request):
 
     if pending_order_exists(passenger_id) or \
        current_order_exists(passenger_id):
-        return bad_request_response({})
+        return bad_request_response({
+            'errMsg': 'You already have an active order.'
+        })
 
     data = request.data
     Order.objects.create(
@@ -109,7 +111,9 @@ def PassengerCancelOrderView(request):
 
     if not (pending_order_exists(passenger_id) or
             current_order_exists(passenger_id)):
-        return bad_request_response({})
+        return bad_request_response({
+            'errMsg': 'You do not have an active order'
+        })
 
     cancel_current_order(passenger_id)
     return payload_response({})
@@ -124,7 +128,9 @@ def PassengerUpdateLocationView(request):
 
     if not (pending_order_exists(passenger_id) or
             current_order_exists(passenger_id)):
-        return bad_request_response({})
+        return bad_request_response({
+            'errMsg': 'You do not have an active order.'
+        })
 
     data = request.data
     keys = ['latitude', 'longitude']
