@@ -28,7 +28,10 @@ class PassengerOrderSerializer(serializers.ModelSerializer):
     start = StartPointSerializer(source='*')
     end = EndPointSerializer(source='*')
     driver = DriverInfoSerializer()
+    price = serializers.DecimalField(source='est_price',
+                                     max_digits=6,
+                                     decimal_places=2)
 
     class Meta:
         model = Order
-        fields = ['start', 'end', 'id', 'driver', 'distance']
+        fields = ['start', 'end', 'id', 'driver', 'distance', 'price']

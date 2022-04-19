@@ -98,6 +98,12 @@ def PassengerGetOrderView(request):
         return payload_response(None)
 
     order = get_current_order(passenger_id)
+    order.distance = calc_distance(
+        order.start_POI_lat,
+        order.start_POI_long,
+        order.end_POI_lat,
+        order.end_POI_long
+    )
     serializer = PassengerOrderSerializer(order)
     return payload_response(serializer.data)
 
