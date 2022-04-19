@@ -157,7 +157,6 @@ class PassengerCreateOrderTest(TestCase):
             **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
         )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.data, {})
 
     def test_get_current_order(self):
         access_token, refresh_token, status_code = authenticate(self)

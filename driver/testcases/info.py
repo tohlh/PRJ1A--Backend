@@ -59,5 +59,5 @@ class DriverInfoTest(TestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual({
-            'ErrMsg': 'identification_no is required'
+            'errMsg': 'identification_no is required'
             }, response.data)
