@@ -179,3 +179,43 @@ def PassengerListOrdersView(request):
         many=True
     )
     return payload_response(serializer.data)
+
+
+@api_view(('GET',))
+def PassengerCurrentOrderView(request):
+    permission_classes = (IsAuthenticated,)
+    if not is_passenger(request):
+        return unauthorized_response()
+    passenger_id = get_passenger_id(request)
+
+    if not (pending_order_exists(passenger_id) or
+            current_order_exists(passenger_id)):
+
+        unpaid_order = Order.objects.filter(
+            status=5
+        )
+
+        if unpaid_order.exists():
+            unpaid_order = unpaid_order.first()
+            return payload_response({
+                'status': 5,
+                'price': unpaid_order.real_price,
+                'distance': unpaid_order.distance
+            })
+
+        return payload_response({
+            'status': -1
+        })
+
+    if pending_order_exists(passenger_id):
+        return payload_response({
+            'status': 0
+        })
+
+    if current_order_exists(passenger_id):
+        current_order = get_current_order(passenger_id)
+        return payload_response({
+            'status': current_order.status,
+            'price': current_order.price,
+            'distance': current_order.distance
+        })
