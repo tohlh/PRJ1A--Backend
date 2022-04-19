@@ -50,7 +50,9 @@ def PassengerNewOrderView(request):
 
     if pending_order_exists(passenger_id) or \
        current_order_exists(passenger_id):
-        return bad_request_response({})
+        return bad_request_response({
+            'errMsg': 'You already have an active order.'
+        })
 
     data = request.data
     Order.objects.create(
@@ -85,7 +87,7 @@ def PassengerNewOrderView(request):
 
 
 @api_view(('GET',))
-def PassengerCurrentOrderView(request):
+def PassengerGetOrderView(request):
     permission_classes = (IsAuthenticated,)
     if not is_passenger(request):
         return unauthorized_response()
@@ -96,6 +98,12 @@ def PassengerCurrentOrderView(request):
         return payload_response(None)
 
     order = get_current_order(passenger_id)
+    order.distance = calc_distance(
+        order.start_POI_lat,
+        order.start_POI_long,
+        order.end_POI_lat,
+        order.end_POI_long
+    )
     serializer = PassengerOrderSerializer(order)
     return payload_response(serializer.data)
 
@@ -109,7 +117,9 @@ def PassengerCancelOrderView(request):
 
     if not (pending_order_exists(passenger_id) or
             current_order_exists(passenger_id)):
-        return bad_request_response({})
+        return bad_request_response({
+            'errMsg': 'You do not have an active order'
+        })
 
     cancel_current_order(passenger_id)
     return payload_response({})
@@ -124,7 +134,9 @@ def PassengerUpdateLocationView(request):
 
     if not (pending_order_exists(passenger_id) or
             current_order_exists(passenger_id)):
-        return bad_request_response({})
+        return bad_request_response({
+            'errMsg': 'You do not have an active order.'
+        })
 
     data = request.data
     keys = ['latitude', 'longitude']
@@ -148,7 +160,8 @@ def PassengerUpdateLocationView(request):
     driver = current_order.driver
     response = {
         'latitude': driver.latitude,
-        'longitude': driver.longitude
+        'longitude': driver.longitude,
+        'rotate': 45
     }
     return payload_response(response)
 
@@ -172,3 +185,43 @@ def PassengerListOrdersView(request):
         many=True
     )
     return payload_response(serializer.data)
+
+
+@api_view(('GET',))
+def PassengerCurrentOrderView(request):
+    permission_classes = (IsAuthenticated,)
+    if not is_passenger(request):
+        return unauthorized_response()
+    passenger_id = get_passenger_id(request)
+
+    if not (pending_order_exists(passenger_id) or
+            current_order_exists(passenger_id)):
+
+        unpaid_order = Order.objects.filter(
+            status=5
+        )
+
+        if unpaid_order.exists():
+            unpaid_order = unpaid_order.first()
+            return payload_response({
+                'status': 5,
+                'price': unpaid_order.real_price,
+                'distance': unpaid_order.distance
+            })
+
+        return payload_response({
+            'status': -1
+        })
+
+    if pending_order_exists(passenger_id):
+        return payload_response({
+            'status': 0
+        })
+
+    if current_order_exists(passenger_id):
+        current_order = get_current_order(passenger_id)
+        return payload_response({
+            'status': current_order.status,
+            'price': current_order.price,
+            'distance': current_order.distance
+        })

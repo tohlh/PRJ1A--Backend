@@ -26,9 +26,9 @@ urlpatterns = [
      path('order/new',
           PassengerNewOrderView,
           name='new_order'),
-     path('order/current',
-          PassengerCurrentOrderView,
-          name='current_order'),
+     path('order/get',
+          PassengerGetOrderView,
+          name='get_order'),
      path('order/cancel',
           PassengerCancelOrderView,
           name='cancel_order'),
@@ -37,5 +37,8 @@ urlpatterns = [
           name='update_location'),
      path('order/list',
           PassengerListOrdersView,
-          name='list_orders')
+          name='list_orders'),
+     path('order/current',
+          PassengerCurrentOrderView,
+          name='current_order'),
 ]

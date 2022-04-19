@@ -39,3 +39,20 @@ class PassengerInfoTest(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(payload, response.data)
+
+    def test_invalid_post_info(self):
+        access_token, refresh_token, status_code = authenticate(self)
+        self.assertEqual(status_code, 200)
+
+        payload = {
+            'username': 'updatedUsername',
+            'phone': '01234567890',
+            'age': 30,
+        }
+        response = self.client.post(
+            '/api/passenger/info',
+            data=payload,
+            content_type='application/json',
+            **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
+        )
+        self.assertEqual(response.status_code, 400)

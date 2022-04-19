@@ -70,7 +70,9 @@ def DriverPickupPassengerView(request):
     driver_id = get_driver_id(request)
 
     if not current_order_exists(driver_id):
-        return bad_request_response({})
+        return bad_request_response({
+            'errMsg': 'You do not have an active order.'
+        })
 
     current_order = get_current_order(driver_id)
     Order.objects.filter(
@@ -89,7 +91,9 @@ def DriverCancelOrderView(request):
     driver_id = get_driver_id(request)
 
     if not current_order_exists(driver_id):
-        return bad_request_response({})
+        return bad_request_response({
+            'errMsg': 'You do not have an active order.'
+        })
 
     current_order = get_current_order(driver_id)
     Order.objects.filter(
@@ -108,7 +112,9 @@ def DriverEndOrderView(request):
     driver_id = get_driver_id(request)
 
     if not current_order_exists(driver_id):
-        return bad_request_response({})
+        return bad_request_response({
+            'errMsg': 'You do not have an active order.'
+        })
 
     current_order = get_current_order(driver_id)
     Order.objects.filter(
