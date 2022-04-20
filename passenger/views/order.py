@@ -35,7 +35,7 @@ def PassengerEstimatePriceView(request):
             }
         ],
         'distance': calc_distance(lat_1, long_1, lat_2, long_2),
-        'price': est_price(lat_1, long_1, lat_2, long_2)
+        'price': str(est_price(lat_1, long_1, lat_2, long_2))
     }
     return payload_response(payload)
 
