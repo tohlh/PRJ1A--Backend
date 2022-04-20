@@ -222,6 +222,6 @@ def PassengerCurrentOrderView(request):
         current_order = get_current_order(passenger_id)
         return payload_response({
             'status': current_order.status,
-            'price': current_order.price,
+            'price': current_order.real_price,
             'distance': current_order.distance
         })
