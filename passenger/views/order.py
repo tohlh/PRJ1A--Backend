@@ -225,3 +225,19 @@ def PassengerCurrentOrderView(request):
             'price': current_order.real_price,
             'distance': current_order.distance
         })
+
+
+@api_view(('POST',))
+def PassengerPayOrderView(request):
+    permission_classes = (IsAuthenticated,)
+    if not is_passenger(request):
+        return unauthorized_response()
+    passenger_id = get_passenger_id(request)
+
+    Order.objects.filter(
+        passenger__id=passenger_id,
+        status=5
+    ).update(
+        status=6
+    )
+    return payload_response({})
