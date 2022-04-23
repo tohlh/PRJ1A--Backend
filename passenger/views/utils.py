@@ -1,4 +1,7 @@
 import jwt
+import json
+import base64
+import math
 from prj1a.settings import SIMPLE_JWT
 from rest_framework.response import Response
 from passenger.models import Passenger
@@ -111,6 +114,28 @@ def update_current_order(passenger_id):
         passenger__id=passenger_id,
         updated_at__gt=time_threshold
     ).update(updated_at=timezone.now())
+
+
+def current_driver_rotation(passenger_id):
+    current_order = get_current_order(passenger_id)
+    decoded_json_string = base64.b64decode(
+        current_order.before_pickup_path
+    )
+
+    points = {}
+    if current_order.status == 1:
+        points = json.loads(decoded_json_string)
+    elif current_order.status == 2:
+        points = json.loads(decoded_json_string)
+
+    if len(points) <= 1:
+        return 0
+
+    point_1 = points[-1]
+    point_2 = points[-2]
+    x = point_1['longitude'] - point_2['longitude']
+    x = x / point_1['latitude'] - point_2['latitude']
+    return math.atan(x)
 
 
 # Http Responses

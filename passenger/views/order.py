@@ -206,7 +206,7 @@ def PassengerUpdateLocationView(request):
     response = {
         'latitude': driver.latitude,
         'longitude': driver.longitude,
-        'rotate': 45
+        'rotate': current_driver_rotation(passenger_id)
     }
     return payload_response(response)
 
