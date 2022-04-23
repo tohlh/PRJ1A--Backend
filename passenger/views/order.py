@@ -13,6 +13,11 @@ def PassengerEstimatePriceView(request):
         return unauthorized_response()
     passenger_id = get_passenger_id(request)
 
+    if passenger_unregistered(passenger_id):
+        return bad_request_response({
+            'errMsg': 'Please complete the registration.'
+        })
+
     data = request.data
     lat_1 = float(request.data['start']['latitude'])
     long_1 = float(request.data['start']['longitude'])
@@ -47,7 +52,11 @@ def PassengerNewOrderView(request):
     if not is_passenger(request):
         return unauthorized_response()
     passenger_id = get_passenger_id(request)
-    passenger_object = Passenger.objects.get(id=passenger_id)
+
+    if passenger_unregistered(passenger_id):
+        return bad_request_response({
+            'errMsg': 'Please complete the registration.'
+        })
 
     if Order.objects.filter(
         passenger__id=passenger_id,
@@ -102,6 +111,11 @@ def PassengerGetOrderView(request):
         return unauthorized_response()
     passenger_id = get_passenger_id(request)
 
+    if passenger_unregistered(passenger_id):
+        return bad_request_response({
+            'errMsg': 'Please complete the registration.'
+        })
+
     if not (pending_order_exists(passenger_id) or
             current_order_exists(passenger_id)):
         return payload_response(None)
@@ -124,10 +138,21 @@ def PassengerCancelOrderView(request):
         return unauthorized_response()
     passenger_id = get_passenger_id(request)
 
+    if passenger_unregistered(passenger_id):
+        return bad_request_response({
+            'errMsg': 'Please complete the registration.'
+        })
+
     if not (pending_order_exists(passenger_id) or
             current_order_exists(passenger_id)):
         return bad_request_response({
             'errMsg': 'You do not have an active order'
+        })
+
+    current_order = get_current_order(passenger_id)
+    if current_order.status >= 2:
+        return bad_request_response({
+            'errMsg': 'You are not allowed to cancel the order'
         })
 
     cancel_current_order(passenger_id)
@@ -140,6 +165,11 @@ def PassengerUpdateLocationView(request):
     if not is_passenger(request):
         return unauthorized_response()
     passenger_id = get_passenger_id(request)
+
+    if passenger_unregistered(passenger_id):
+        return bad_request_response({
+            'errMsg': 'Please complete the registration.'
+        })
 
     if not (pending_order_exists(passenger_id) or
             current_order_exists(passenger_id)):
@@ -182,6 +212,11 @@ def PassengerListOrdersView(request):
         return unauthorized_response()
     passenger_id = get_passenger_id(request)
 
+    if passenger_unregistered(passenger_id):
+        return bad_request_response({
+            'errMsg': 'Please complete the registration.'
+        })
+
     offset = int(request.GET.get('offset', 0))
     limit = int(request.GET.get('limit', 10))
 
@@ -202,6 +237,11 @@ def PassengerCurrentOrderView(request):
     if not is_passenger(request):
         return unauthorized_response()
     passenger_id = get_passenger_id(request)
+
+    if passenger_unregistered(passenger_id):
+        return bad_request_response({
+            'errMsg': 'Please complete the registration.'
+        })
 
     if not (pending_order_exists(passenger_id) or
             current_order_exists(passenger_id)):
@@ -242,6 +282,11 @@ def PassengerPayOrderView(request):
     if not is_passenger(request):
         return unauthorized_response()
     passenger_id = get_passenger_id(request)
+
+    if passenger_unregistered(passenger_id):
+        return bad_request_response({
+            'errMsg': 'Please complete the registration.'
+        })
 
     Order.objects.filter(
         passenger__id=passenger_id,

@@ -1,6 +1,7 @@
 import jwt
 from prj1a.settings import SIMPLE_JWT
 from rest_framework.response import Response
+from passenger.models import Passenger
 from datetime import timedelta
 from django.utils import timezone
 from order.models import Order
@@ -24,6 +25,16 @@ def is_passenger(request):
 def get_passenger_id(request):
     decoded_token = decode_passenger_token(request)
     return decoded_token['user_id']
+
+
+def passenger_unregistered(passenger_id):
+    passenger_object = Passenger.objects.get(id=passenger_id)
+    if passenger_object.username == '' or \
+       passenger_object.phone == '' or \
+       passenger_object.identification_no == '' or \
+       passenger_object.age is None:
+        return True
+    return False
 
 
 # Orders
