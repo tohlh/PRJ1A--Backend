@@ -58,6 +58,12 @@ def DriverGetOrderView(request):
         return payload_response({})
 
     current_order = get_current_order(driver_id)
+    current_order.distance = calc_distance(
+        current_order.start_POI_lat,
+        current_order.start_POI_long,
+        current_order.end_POI_lat,
+        current_order.end_POI_long
+    )
     serializer = DriverOrderSerializer(current_order)
     return payload_response(serializer.data)
 
@@ -145,3 +151,24 @@ def DriverListOrdersView(request):
         many=True
     )
     return payload_response(serializer.data)
+
+
+@api_view(('GET',))
+def DriverCurrentOrderView(request):
+    permission_classes = (IsAuthenticated,)
+    if not is_driver(request):
+        return unauthorized_response()
+    driver_id = get_driver_id(request)
+
+    if not current_order_exists(driver_id):
+        return payload_response({
+            'status': -1
+        })
+
+    if current_order_exists(driver_id):
+        current_order = get_current_order(driver_id)
+        return payload_response({
+            'status': current_order.status,
+            'price': current_order.real_price,
+            'distance': current_order.distance
+        })
