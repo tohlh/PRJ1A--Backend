@@ -8,7 +8,13 @@ from passenger.testcases.utils import *
 
 class PassengerEstimatePriceTest(TestCase):
     def setUp(self):
-        pass
+        Passenger.objects.create(
+            id=1,
+            username='username1',
+            age=30,
+            identification_no='012345678987654321',
+            phone='0123456789'
+        )
 
     def test_valid_est_price(self):
         # valid request
@@ -75,7 +81,13 @@ class PassengerEstimatePriceTest(TestCase):
 
 class PassengerCreateOrderTest(TestCase):
     def setUp(self):
-        access_token, refresh_token, status_code = authenticate(self)
+        Passenger.objects.create(
+            id=1,
+            username='username1',
+            age=30,
+            identification_no='012345678987654321',
+            phone='0123456789'
+        )
         for x in range(0, 100):
             Order.objects.create(
                 passenger=Passenger.objects.get(id=1),
