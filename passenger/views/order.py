@@ -121,6 +121,12 @@ def PassengerGetOrderView(request):
         return payload_response(None)
 
     order = get_current_order(passenger_id)
+
+    if order.driver is None:
+        return bad_request_response({
+            'errMsg': 'No driver assigned.'
+        })
+
     order.distance = calc_distance(
         order.start_POI_lat,
         order.start_POI_long,
