@@ -47,6 +47,15 @@ def PassengerNewOrderView(request):
     if not is_passenger(request):
         return unauthorized_response()
     passenger_id = get_passenger_id(request)
+    passenger_object = Passenger.objects.get(id=passenger_id)
+
+    if Order.objects.filter(
+        passenger__id=passenger_id,
+        status=5
+    ).exists():
+        return bad_request_response({
+            'errMsg': 'You have an unpaid order.'
+        })
 
     if pending_order_exists(passenger_id) or \
        current_order_exists(passenger_id):
