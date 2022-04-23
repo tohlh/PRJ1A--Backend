@@ -13,6 +13,10 @@ def DriverQueueOrderView(request):
     if not is_driver(request):
         return unauthorized_response()
     driver_id = get_driver_id(request)
+    if driver_unregistered(driver_id):
+        return bad_request_response({
+            'errMsg': 'Please complete the registration.'
+        })
     return payload_response({})
 
 
@@ -22,6 +26,10 @@ def DriverUpdateLocationView(request):
     if not is_driver(request):
         return unauthorized_response()
     driver_id = get_driver_id(request)
+    if driver_unregistered(driver_id):
+        return bad_request_response({
+            'errMsg': 'Please complete the registration.'
+        })
 
     latitude = request.data['latitude']
     longitude = request.data['longitude']
@@ -53,6 +61,10 @@ def DriverGetOrderView(request):
     if not is_driver(request):
         return unauthorized_response()
     driver_id = get_driver_id(request)
+    if driver_unregistered(driver_id):
+        return bad_request_response({
+            'errMsg': 'Please complete the registration.'
+        })
 
     if not current_order_exists(driver_id):
         return payload_response({})
@@ -74,6 +86,10 @@ def DriverPickupPassengerView(request):
     if not is_driver(request):
         return unauthorized_response()
     driver_id = get_driver_id(request)
+    if driver_unregistered(driver_id):
+        return bad_request_response({
+            'errMsg': 'Please complete the registration.'
+        })
 
     if not current_order_exists(driver_id):
         return bad_request_response({
@@ -95,6 +111,10 @@ def DriverCancelOrderView(request):
     if not is_driver(request):
         return unauthorized_response()
     driver_id = get_driver_id(request)
+    if driver_unregistered(driver_id):
+        return bad_request_response({
+            'errMsg': 'Please complete the registration.'
+        })
 
     if not current_order_exists(driver_id):
         return bad_request_response({
@@ -116,6 +136,10 @@ def DriverEndOrderView(request):
     if not is_driver(request):
         return unauthorized_response()
     driver_id = get_driver_id(request)
+    if driver_unregistered(driver_id):
+        return bad_request_response({
+            'errMsg': 'Please complete the registration.'
+        })
 
     if not current_order_exists(driver_id):
         return bad_request_response({
@@ -138,6 +162,10 @@ def DriverListOrdersView(request):
     if not is_driver(request):
         return unauthorized_response()
     driver_id = get_driver_id(request)
+    if driver_unregistered(driver_id):
+        return bad_request_response({
+            'errMsg': 'Please complete the registration.'
+        })
 
     offset = int(request.GET.get('offset', 0))
     limit = int(request.GET.get('limit', 10))
@@ -159,6 +187,10 @@ def DriverCurrentOrderView(request):
     if not is_driver(request):
         return unauthorized_response()
     driver_id = get_driver_id(request)
+    if driver_unregistered(driver_id):
+        return bad_request_response({
+            'errMsg': 'Please complete the registration.'
+        })
 
     if not current_order_exists(driver_id):
         return payload_response({

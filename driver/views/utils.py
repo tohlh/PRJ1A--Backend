@@ -32,6 +32,16 @@ def get_driver_id(request):
     return decoded_token['user_id']
 
 
+def driver_unregistered(driver_id):
+    driver_object = Driver.objects.get(id=driver_id)
+    if driver_object.username == '' or \
+       driver_object.phone == '' or \
+       driver_object.identification_no == '' or \
+       driver_object.age is None:
+        return True
+    return False
+
+
 # Order
 def current_order_exists(driver_id):
     time_threshold = timezone.now() - timedelta(minutes=2)
