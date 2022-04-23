@@ -1,9 +1,17 @@
 from .utils import *
+from driver.models import Driver
 
 
 class DriverOrderTests(TestCase):
     def setUp(self):
-        pass
+        Driver.objects.create(
+            id=1,
+            username='username1',
+            age=30,
+            identification_no='012345678987654321',
+            phone='0123456789',
+            carplate='京01234'
+        )
 
     def test_queue_order(self):
         access_token, refresh_token, status_code = authenticate(self)
