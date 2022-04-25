@@ -39,4 +39,5 @@ class DriverOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ['start', 'end', 'paths', 'id',
-                  'passenger', 'distance', 'est_price']
+                  'passenger', 'distance', 'est_price',
+                  'status']
