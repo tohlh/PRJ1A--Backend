@@ -34,4 +34,6 @@ class PassengerOrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ['start', 'end', 'id', 'driver', 'distance', 'price']
+        fields = ['start', 'end', 'id',
+                  'driver', 'distance', 'price',
+                  'status']

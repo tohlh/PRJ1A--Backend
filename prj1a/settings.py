@@ -175,6 +175,6 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 
-    'WECHAT_APP_ID': 'wx07d70330f0e5a263',
-    'WECHAT_APP_SECRET': 'ba5d5cea106e1893b61c3d3e5680abac',
+    'WECHAT_APP_ID': '',
+    'WECHAT_APP_SECRET': '',
 }

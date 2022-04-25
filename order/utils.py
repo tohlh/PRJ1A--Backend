@@ -40,6 +40,11 @@ def pending_passenger_orders():
 def pending_drivers():
     time_threshold = timezone.now() - timedelta(minutes=1)
     ret = Driver.objects.filter(
+        ~Q(username=''),
+        ~Q(age=None),
+        ~Q(identification_no=''),
+        ~Q(carplate=''),
+        ~Q(phone=''),
         last_online__gt=time_threshold
     )
     return ret

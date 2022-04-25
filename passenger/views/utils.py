@@ -1,6 +1,10 @@
 import jwt
+import json
+import base64
+import math
 from prj1a.settings import SIMPLE_JWT
 from rest_framework.response import Response
+from passenger.models import Passenger
 from datetime import timedelta
 from django.utils import timezone
 from order.models import Order
@@ -24,6 +28,16 @@ def is_passenger(request):
 def get_passenger_id(request):
     decoded_token = decode_passenger_token(request)
     return decoded_token['user_id']
+
+
+def passenger_unregistered(passenger_id):
+    passenger_object = Passenger.objects.get(id=passenger_id)
+    if passenger_object.username == '' or \
+       passenger_object.phone == '' or \
+       passenger_object.identification_no == '' or \
+       passenger_object.age is None:
+        return True
+    return False
 
 
 # Orders
@@ -100,6 +114,28 @@ def update_current_order(passenger_id):
         passenger__id=passenger_id,
         updated_at__gt=time_threshold
     ).update(updated_at=timezone.now())
+
+
+def current_driver_rotation(passenger_id):
+    current_order = get_current_order(passenger_id)
+    decoded_json_string = base64.b64decode(
+        current_order.before_pickup_path
+    )
+
+    points = {}
+    if current_order.status == 1:
+        points = json.loads(decoded_json_string)
+    elif current_order.status == 2:
+        points = json.loads(decoded_json_string)
+
+    if len(points) <= 1:
+        return 0
+
+    point_1 = points[-1]
+    point_2 = points[-2]
+    x = point_1['longitude'] - point_2['longitude']
+    x = x / point_1['latitude'] - point_2['latitude']
+    return math.atan(x)
 
 
 # Http Responses
