@@ -14,7 +14,7 @@ def PassengerEstimatePriceView(request):
     passenger_id = get_passenger_id(request)
 
     if passenger_unregistered(passenger_id):
-        return bad_request_response({
+        return unregistered_response({
             'errMsg': 'Please complete the registration.'
         })
 
@@ -54,7 +54,7 @@ def PassengerNewOrderView(request):
     passenger_id = get_passenger_id(request)
 
     if passenger_unregistered(passenger_id):
-        return bad_request_response({
+        return unregistered_response({
             'errMsg': 'Please complete the registration.'
         })
 
@@ -112,7 +112,7 @@ def PassengerGetOrderView(request):
     passenger_id = get_passenger_id(request)
 
     if passenger_unregistered(passenger_id):
-        return bad_request_response({
+        return unregistered_response({
             'errMsg': 'Please complete the registration.'
         })
 
@@ -145,7 +145,7 @@ def PassengerCancelOrderView(request):
     passenger_id = get_passenger_id(request)
 
     if passenger_unregistered(passenger_id):
-        return bad_request_response({
+        return unregistered_response({
             'errMsg': 'Please complete the registration.'
         })
 
@@ -173,7 +173,7 @@ def PassengerUpdateLocationView(request):
     passenger_id = get_passenger_id(request)
 
     if passenger_unregistered(passenger_id):
-        return bad_request_response({
+        return unregistered_response({
             'errMsg': 'Please complete the registration.'
         })
 
@@ -219,7 +219,7 @@ def PassengerListOrdersView(request):
     passenger_id = get_passenger_id(request)
 
     if passenger_unregistered(passenger_id):
-        return bad_request_response({
+        return unregistered_response({
             'errMsg': 'Please complete the registration.'
         })
 
@@ -245,7 +245,7 @@ def PassengerCurrentOrderView(request):
     passenger_id = get_passenger_id(request)
 
     if passenger_unregistered(passenger_id):
-        return bad_request_response({
+        return unregistered_response({
             'errMsg': 'Please complete the registration.'
         })
 
@@ -290,7 +290,7 @@ def PassengerPayOrderView(request):
     passenger_id = get_passenger_id(request)
 
     if passenger_unregistered(passenger_id):
-        return bad_request_response({
+        return unregistered_response({
             'errMsg': 'Please complete the registration.'
         })
 

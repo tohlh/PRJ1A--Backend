@@ -129,6 +129,10 @@ def bad_request_response(payload):
     return Response(payload, 400)
 
 
+def unregistered_response(payload):
+    return Response(payload, 402)
+
+
 def unauthorized_response():
     return Response({
             'response': 'You are not authorized to access this API'
