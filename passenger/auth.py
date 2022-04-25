@@ -105,8 +105,8 @@ class PassengerTokenObtainPairSerializer(TokenObtainPairSerializer):
                 "unionid": "o6_bmasdasdsad6_2sgVt7hMZOPfL"
             }
         req_params = {
-            'appid': api_settings.WECHAT_APP_ID,
-            'secret': api_settings.WECHAT_APP_SECRET,
+            'appid': 'wx36fdb67c0815be0b',
+            'secret': 'e26f2a60db883f6b3f4c0d65dcbcefe0',
             'js_code': code,
             'grant_type': 'authorization_code'
         }

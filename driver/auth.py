@@ -116,8 +116,8 @@ class DriverTokenObtainPairSerializer(TokenObtainPairSerializer):
                 "unionid": "o6_bmasdasdsad6_2sgVt7hMZOPfL"
             }
         req_params = {
-            'appid': api_settings.WECHAT_APP_ID,
-            'secret': api_settings.WECHAT_APP_SECRET,
+            'appid': 'wx7cf23bb5679e4a63',
+            'secret': '25e8a2bebfc9bda4b38afd2d0da9b573',
             'js_code': code,
             'grant_type': 'authorization_code'
         }
