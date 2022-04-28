@@ -15,7 +15,7 @@ def DriverQueueOrderView(request):
     driver_id = get_driver_id(request)
     if driver_unregistered(driver_id):
         return unregistered_response({
-            'errMsg': 'Please complete the registration.'
+            'errMsg': '请填写个人资料。'
         })
     return payload_response({})
 
@@ -28,7 +28,7 @@ def DriverUpdateLocationView(request):
     driver_id = get_driver_id(request)
     if driver_unregistered(driver_id):
         return unregistered_response({
-            'errMsg': 'Please complete the registration.'
+            'errMsg': '请填写个人资料。'
         })
 
     latitude = request.data['latitude']
@@ -63,7 +63,7 @@ def DriverGetOrderView(request):
     driver_id = get_driver_id(request)
     if driver_unregistered(driver_id):
         return unregistered_response({
-            'errMsg': 'Please complete the registration.'
+            'errMsg': '请填写个人资料。'
         })
 
     if not current_order_exists(driver_id):
@@ -88,12 +88,12 @@ def DriverPickupPassengerView(request):
     driver_id = get_driver_id(request)
     if driver_unregistered(driver_id):
         return unregistered_response({
-            'errMsg': 'Please complete the registration.'
+            'errMsg': '请填写个人资料。'
         })
 
     if not current_order_exists(driver_id):
         return bad_request_response({
-            'errMsg': 'You do not have an active order.'
+            'errMsg': '您目前没有接到订单。'
         })
 
     current_order = get_current_order(driver_id)
@@ -113,12 +113,12 @@ def DriverCancelOrderView(request):
     driver_id = get_driver_id(request)
     if driver_unregistered(driver_id):
         return unregistered_response({
-            'errMsg': 'Please complete the registration.'
+            'errMsg': '请填写个人资料。'
         })
 
     if not current_order_exists(driver_id):
         return bad_request_response({
-            'errMsg': 'You do not have an active order.'
+            'errMsg': '您目前没有接到订单。'
         })
 
     current_order = get_current_order(driver_id)
@@ -138,12 +138,12 @@ def DriverEndOrderView(request):
     driver_id = get_driver_id(request)
     if driver_unregistered(driver_id):
         return unregistered_response({
-            'errMsg': 'Please complete the registration.'
+            'errMsg': '请填写个人资料。'
         })
 
     if not current_order_exists(driver_id):
         return bad_request_response({
-            'errMsg': 'You do not have an active order.'
+            'errMsg': '您目前没有接到订单。'
         })
 
     current_order = get_current_order(driver_id)
@@ -164,7 +164,7 @@ def DriverListOrdersView(request):
     driver_id = get_driver_id(request)
     if driver_unregistered(driver_id):
         return unregistered_response({
-            'errMsg': 'Please complete the registration.'
+            'errMsg': '请填写个人资料。'
         })
 
     offset = int(request.GET.get('offset', 0))
@@ -190,7 +190,7 @@ def DriverCurrentOrderView(request):
     driver_id = get_driver_id(request)
     if driver_unregistered(driver_id):
         return unregistered_response({
-            'errMsg': 'Please complete the registration.'
+            'errMsg': '请填写个人资料。'
         })
 
     if not current_order_exists(driver_id):
