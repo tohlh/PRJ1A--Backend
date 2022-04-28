@@ -116,6 +116,11 @@ def PassengerGetOrderView(request):
             'errMsg': 'Please complete the registration.'
         })
 
+    if unpaid_order_exists(passenger_id):
+        unpaid_order = get_unpaid_order(passenger_id)
+        serializer = PassengerOrderSerializer(unpaid_order)
+        return payload_response(serializer.data)
+
     if not (pending_order_exists(passenger_id) or
             current_order_exists(passenger_id)):
         return payload_response(None)

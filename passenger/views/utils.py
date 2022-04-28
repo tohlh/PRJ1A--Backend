@@ -65,6 +65,13 @@ def current_order_exists(passenger_id):
     return ret1 or ret2
 
 
+def unpaid_order_exists(passenger_id):
+    return Order.objects.filter(
+        status=5,
+        passenger__id=passenger_id,
+    ).exists()
+
+
 def get_current_order(passenger_id):
     time_threshold = timezone.now() - timedelta(minutes=2)
     ret = Order.objects.filter(
@@ -114,6 +121,15 @@ def update_current_order(passenger_id):
         passenger__id=passenger_id,
         updated_at__gt=time_threshold
     ).update(updated_at=timezone.now())
+
+
+def get_unpaid_order(passenger_id):
+    ret = Order.objects.filter(
+        status=5,
+        passenger__id=passenger_id,
+    )
+    if ret.exists():
+        return ret.first()
 
 
 def current_driver_rotation(passenger_id):
