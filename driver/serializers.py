@@ -27,7 +27,7 @@ class PathsSerializer(serializers.ModelSerializer):
 class PassengerInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Passenger
-        fields = ['phone']
+        fields = ['username', 'phone']
 
 
 class DriverOrderSerializer(serializers.ModelSerializer):
