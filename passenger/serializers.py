@@ -24,11 +24,26 @@ class DriverInfoSerializer(serializers.ModelSerializer):
         fields = ['carplate', 'phone']
 
 
-class PassengerOrderSerializer(serializers.ModelSerializer):
+class PassengerOngoingOrderSerializer(serializers.ModelSerializer):
     start = StartPointSerializer(source='*')
     end = EndPointSerializer(source='*')
     driver = DriverInfoSerializer()
     price = serializers.DecimalField(source='est_price',
+                                     max_digits=6,
+                                     decimal_places=2)
+
+    class Meta:
+        model = Order
+        fields = ['start', 'end', 'id',
+                  'driver', 'distance', 'price',
+                  'status']
+
+
+class PassengerCompletedOrderSerializer(serializers.ModelSerializer):
+    start = StartPointSerializer(source='*')
+    end = EndPointSerializer(source='*')
+    driver = DriverInfoSerializer()
+    price = serializers.DecimalField(source='real_price',
                                      max_digits=6,
                                      decimal_places=2)
 

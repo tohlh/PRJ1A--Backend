@@ -118,7 +118,7 @@ def PassengerGetOrderView(request):
 
     if unpaid_order_exists(passenger_id):
         unpaid_order = get_unpaid_order(passenger_id)
-        serializer = PassengerOrderSerializer(unpaid_order)
+        serializer = PassengerCompletedOrderSerializer(unpaid_order)
         return payload_response(serializer.data)
 
     if not (pending_order_exists(passenger_id) or
@@ -131,14 +131,13 @@ def PassengerGetOrderView(request):
         return bad_request_response({
             'errMsg': 'No driver assigned.'
         })
-
     order.distance = calc_distance(
         order.start_POI_lat,
         order.start_POI_long,
         order.end_POI_lat,
         order.end_POI_long
     )
-    serializer = PassengerOrderSerializer(order)
+    serializer = PassengerOngoingOrderSerializer(order)
     return payload_response(serializer.data)
 
 
@@ -236,7 +235,7 @@ def PassengerListOrdersView(request):
         passenger__id=passenger_id
     ).order_by('-created_at')
     orders = orders[offset:offset+limit]
-    serializer = PassengerOrderSerializer(
+    serializer = PassengerCompletedOrderSerializer(
         orders,
         many=True
     )
@@ -270,7 +269,7 @@ def PassengerCurrentOrderView(request):
 
     if not (pending_order_exists(passenger_id) or
             current_order_exists(passenger_id)):
-        if unpaid_order_exists():
+        if unpaid_order_exists(passenger_id):
             unpaid_order = get_unpaid_order(passenger_id)
             return payload_response({
                 'status': 5,
