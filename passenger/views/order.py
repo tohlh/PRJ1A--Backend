@@ -253,6 +253,7 @@ def PassengerCurrentOrderView(request):
             current_order_exists(passenger_id)):
 
         unpaid_order = Order.objects.filter(
+            passenger__id=passenger_id,
             status=5
         )
 
