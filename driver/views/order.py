@@ -14,7 +14,7 @@ def DriverQueueOrderView(request):
         return unauthorized_response()
     driver_id = get_driver_id(request)
     if driver_unregistered(driver_id):
-        return bad_request_response({
+        return unregistered_response({
             'errMsg': 'Please complete the registration.'
         })
     return payload_response({})
@@ -27,7 +27,7 @@ def DriverUpdateLocationView(request):
         return unauthorized_response()
     driver_id = get_driver_id(request)
     if driver_unregistered(driver_id):
-        return bad_request_response({
+        return unregistered_response({
             'errMsg': 'Please complete the registration.'
         })
 
@@ -62,7 +62,7 @@ def DriverGetOrderView(request):
         return unauthorized_response()
     driver_id = get_driver_id(request)
     if driver_unregistered(driver_id):
-        return bad_request_response({
+        return unregistered_response({
             'errMsg': 'Please complete the registration.'
         })
 
@@ -87,7 +87,7 @@ def DriverPickupPassengerView(request):
         return unauthorized_response()
     driver_id = get_driver_id(request)
     if driver_unregistered(driver_id):
-        return bad_request_response({
+        return unregistered_response({
             'errMsg': 'Please complete the registration.'
         })
 
@@ -112,7 +112,7 @@ def DriverCancelOrderView(request):
         return unauthorized_response()
     driver_id = get_driver_id(request)
     if driver_unregistered(driver_id):
-        return bad_request_response({
+        return unregistered_response({
             'errMsg': 'Please complete the registration.'
         })
 
@@ -137,7 +137,7 @@ def DriverEndOrderView(request):
         return unauthorized_response()
     driver_id = get_driver_id(request)
     if driver_unregistered(driver_id):
-        return bad_request_response({
+        return unregistered_response({
             'errMsg': 'Please complete the registration.'
         })
 
@@ -163,7 +163,7 @@ def DriverListOrdersView(request):
         return unauthorized_response()
     driver_id = get_driver_id(request)
     if driver_unregistered(driver_id):
-        return bad_request_response({
+        return unregistered_response({
             'errMsg': 'Please complete the registration.'
         })
 
@@ -188,7 +188,7 @@ def DriverCurrentOrderView(request):
         return unauthorized_response()
     driver_id = get_driver_id(request)
     if driver_unregistered(driver_id):
-        return bad_request_response({
+        return unregistered_response({
             'errMsg': 'Please complete the registration.'
         })
 
