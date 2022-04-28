@@ -255,26 +255,6 @@ def PassengerCurrentOrderView(request):
             'errMsg': 'Please complete the registration.'
         })
 
-    if not (pending_order_exists(passenger_id) or
-            current_order_exists(passenger_id)):
-
-        unpaid_order = Order.objects.filter(
-            passenger__id=passenger_id,
-            status=5
-        )
-
-        if unpaid_order.exists():
-            unpaid_order = unpaid_order.first()
-            return payload_response({
-                'status': 5,
-                'price': unpaid_order.real_price,
-                'distance': unpaid_order.distance
-            })
-
-        return payload_response({
-            'status': -1
-        })
-
     if pending_order_exists(passenger_id):
         return payload_response({
             'status': 0
@@ -287,6 +267,20 @@ def PassengerCurrentOrderView(request):
             'price': current_order.real_price,
             'distance': current_order.distance
         })
+
+    if not (pending_order_exists(passenger_id) or
+            current_order_exists(passenger_id)):
+        if unpaid_order_exists():
+            unpaid_order = get_unpaid_order(passenger_id)
+            return payload_response({
+                'status': 5,
+                'price': unpaid_order.real_price,
+                'distance': unpaid_order.distance
+            })
+
+    return payload_response({
+        'status': -1
+    })
 
 
 @api_view(('POST',))
