@@ -29,6 +29,35 @@ def getPOI(latitude, longitude):
         response['result']['pois'][0]['addr']
 
 
+def get_direction(lat_1, long_1, lat_2, long_2):
+    params = {
+        'ak': BAIDU_APP_KEY,
+        'coord_type': 'gcj02',
+        'ret_coordtype': 'gcj02',
+        'origin': f'{lat_1},{long_1}',
+        'destination': f'{lat_2},{long_2}',
+    }
+    response = requests.get(
+        "https://api.map.baidu.com/direction/v2/driving",
+        params=params
+    ).json()
+
+    routes = response['result']['routes'][0]['steps']
+
+    ret = []
+    for route in routes:
+        path = route['path']
+        coords = path.split(';')
+        for coord in coords:
+            latitude, longitude = coord.split(',')
+            ret.append({
+                'latitude': latitude,
+                'longitude': longitude
+            })
+
+    return ret
+
+
 def calc_distance(lat_1, long_1, lat_2, long_2):
     lat_1 = radians(lat_1)
     long_1 = radians(long_1)

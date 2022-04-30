@@ -2,6 +2,7 @@ from rest_framework import serializers
 from order.models import Order
 from driver.models import Driver
 from passenger.views.utils import *
+from order.utils import *
 
 
 class StartPointSerializer(serializers.Serializer):
@@ -24,6 +25,16 @@ class DriverInfoSerializer(serializers.ModelSerializer):
         fields = ['carplate', 'phone']
 
 
+class RouteFieldSerializer(serializers.Serializer):
+    def to_representation(self, instance):
+        return get_direction(
+            instance.start_POI_lat,
+            instance.start_POI_long,
+            instance.end_POI_lat,
+            instance.end_POI_long
+        )
+
+
 class PassengerOngoingOrderSerializer(serializers.ModelSerializer):
     start = StartPointSerializer(source='*')
     end = EndPointSerializer(source='*')
@@ -31,12 +42,13 @@ class PassengerOngoingOrderSerializer(serializers.ModelSerializer):
     price = serializers.DecimalField(source='est_price',
                                      max_digits=6,
                                      decimal_places=2)
+    points = RouteFieldSerializer(source='*')
 
     class Meta:
         model = Order
         fields = ['start', 'end', 'id',
                   'driver', 'distance', 'price',
-                  'status']
+                  'status', 'points']
 
 
 class PassengerCompletedOrderSerializer(serializers.ModelSerializer):
