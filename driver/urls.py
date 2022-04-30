@@ -18,6 +18,9 @@ urlpatterns = [
      path('info',
           DriverInfoView,
           name='driver_info'),
+     path('info/reset',
+          DriverResetInfoView,
+          name='driver_info_reset'),
      # order
      path('order/queue',
           DriverQueueOrderView,
