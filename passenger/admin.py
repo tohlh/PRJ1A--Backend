@@ -3,7 +3,7 @@ from .models import Passenger
 
 
 class PassengerAdmin(admin.ModelAdmin):
-    list_display = ['username', 'phone', 'identification_no']
+    list_display = ['id', 'username', 'phone', 'identification_no']
 
 
 admin.site.register(Passenger, PassengerAdmin)
