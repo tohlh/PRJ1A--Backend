@@ -99,13 +99,6 @@ def cancel_current_order(passenger_id):
     ).update(status=3)
 
 
-def update_current_order(passenger_id):
-    pending_order = Order.objects.filter(
-        Q(status=0) | Q(status=1),
-        passenger__id=passenger_id,
-    ).update(updated_at=timezone.now())
-
-
 def get_unpaid_order(passenger_id):
     ret = Order.objects.filter(
         status=5,
