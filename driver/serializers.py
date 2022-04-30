@@ -42,6 +42,8 @@ class RouteFieldSerializer(serializers.Serializer):
 
 
 class DriverOngoingOrderSerializer(serializers.ModelSerializer):
+    start = StartPointSerializer(source='*')
+    end = EndPointSerializer(source='*')
     points = RouteFieldSerializer(source='*')
     paths = PathsSerializer(source='*')
     passenger = PassengerInfoSerializer()
