@@ -2,6 +2,7 @@ from django.urls import path
 from driver.auth import *
 from driver.views.info import *
 from driver.views.order import *
+from driver.views.message import *
 
 urlpatterns = [
      # driver's tokens
@@ -45,5 +46,9 @@ urlpatterns = [
           name='end_order'),
      path('order/list',
           DriverListOrdersView,
-          name='list_orders')
+          name='list_orders'),
+     # driver's message
+     path('msg',
+          DriverMessageView,
+          name='driver_message')
 ]

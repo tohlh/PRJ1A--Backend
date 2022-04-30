@@ -1,6 +1,8 @@
+from message.models import DriverMessage
 from rest_framework import serializers
 from order.utils import *
 from order.models import Order
+from message.models import DriverMessage
 from passenger.models import Passenger
 from driver.views.utils import *
 
@@ -74,3 +76,9 @@ class DriverCompletedOrderSerializer(serializers.ModelSerializer):
         fields = ['start', 'end', 'paths', 'id',
                   'passenger', 'distance', 'real_price',
                   'status']
+
+
+class DriverMessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DriverMessage
+        fields = ['title', 'description', 'created_at', 'value', 'color']
