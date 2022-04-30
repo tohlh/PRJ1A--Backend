@@ -202,7 +202,6 @@ def PassengerUpdateLocationView(request):
         if key not in data:
             return bad_request_response(f'\'{key}\' is required')
 
-    update_current_order(passenger_id)
     Passenger.objects.filter(
         id=passenger_id
     ).update(

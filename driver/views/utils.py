@@ -44,18 +44,18 @@ def driver_unregistered(driver_id):
 
 # Order
 def current_order_exists(driver_id):
-    time_threshold = timezone.now() - timedelta(minutes=2)
-    criteria = (Q(driver__id=driver_id) & Q(status=1) &
-                Q(updated_at__gt=time_threshold)) | Q(status=2)
-    current_order = Order.objects.filter(criteria)
+    current_order = Order.objects.filter(
+        Q(status=1) | Q(status=2),
+        driver__id=driver_id
+    )
     return current_order.exists()
 
 
 def get_current_order(driver_id):
-    time_threshold = timezone.now() - timedelta(minutes=2)
-    criteria = (Q(driver__id=driver_id) & Q(status=1) &
-                Q(updated_at__gt=time_threshold)) | Q(status=2)
-    current_order = Order.objects.get(criteria)
+    current_order = Order.objects.get(
+        Q(status=1) | Q(status=2),
+        driver__id=driver_id
+    )
     return current_order
 
 
