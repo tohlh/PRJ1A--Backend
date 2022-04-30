@@ -79,11 +79,7 @@ def est_price(lat_1, long_1, lat_2, long_2):
 
 
 def pending_passenger_orders():
-    time_threshold = timezone.now() - timedelta(minutes=2)
-    ret = Order.objects.filter(
-        status=0,
-        updated_at__gt=time_threshold
-    )
+    ret = Order.objects.filter(status=0)
     return ret
 
 

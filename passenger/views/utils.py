@@ -42,27 +42,19 @@ def passenger_unregistered(passenger_id):
 
 # Orders
 def pending_order_exists(passenger_id):
-    time_threshold = timezone.now() - timedelta(minutes=2)
     pending_order = Order.objects.filter(
         status=0,
-        passenger__id=passenger_id,
-        updated_at__gt=time_threshold
+        passenger__id=passenger_id
     )
     return pending_order.exists()
 
 
 def current_order_exists(passenger_id):
-    time_threshold = timezone.now() - timedelta(minutes=2)
-    ret1 = Order.objects.filter(
-        status=1,
-        passenger__id=passenger_id,
-        updated_at__gt=time_threshold
-    )
-    ret2 = Order.objects.filter(
-        status=2,
+    ret = Order.objects.filter(
+        Q(status=1) | Q(status=2),
         passenger__id=passenger_id,
     )
-    return ret1 or ret2
+    return ret.exists()
 
 
 def unpaid_order_exists(passenger_id):
@@ -73,25 +65,20 @@ def unpaid_order_exists(passenger_id):
 
 
 def get_current_order(passenger_id):
-    time_threshold = timezone.now() - timedelta(minutes=2)
     ret = Order.objects.filter(
         status=0,
         passenger__id=passenger_id,
-        updated_at__gt=time_threshold
     )
     if ret.exists():
         return ret.first()
 
-    time_threshold = timezone.now() - timedelta(minutes=2)
     ret = Order.objects.filter(
         status=1,
         passenger__id=passenger_id,
-        updated_at__gt=time_threshold
     )
     if ret.exists():
         return ret.first()
 
-    time_threshold = timezone.now() - timedelta(minutes=2)
     ret = Order.objects.filter(
         status=2,
         passenger__id=passenger_id,
@@ -101,11 +88,9 @@ def get_current_order(passenger_id):
 
 
 def cancel_current_order(passenger_id):
-    time_threshold = timezone.now() - timedelta(minutes=2)
     Order.objects.filter(
         Q(status=0) | Q(status=1),
         passenger__id=passenger_id,
-        updated_at__gt=time_threshold
     ).update(status=3)
 
     Order.objects.filter(
@@ -115,11 +100,9 @@ def cancel_current_order(passenger_id):
 
 
 def update_current_order(passenger_id):
-    time_threshold = timezone.now() - timedelta(minutes=2)
     pending_order = Order.objects.filter(
         Q(status=0) | Q(status=1),
         passenger__id=passenger_id,
-        updated_at__gt=time_threshold
     ).update(updated_at=timezone.now())
 
 
