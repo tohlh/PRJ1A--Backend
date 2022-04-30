@@ -19,6 +19,17 @@ def PassengerEstimatePriceView(request):
         })
 
     data = request.data
+
+    if data['start']['name'] == '' or data['start']['address'] == '':
+        data['start']['name'], data['start']['address'] = \
+            getPOI(data['start']['latitude'],
+                   data['start']['longitude'])
+
+    if data['end']['name'] == '' or data['end']['address'] == '':
+        data['end']['name'], data['end']['address'] = \
+            getPOI(data['end']['latitude'],
+                   data['end']['longitude'])
+
     lat_1 = float(request.data['start']['latitude'])
     long_1 = float(request.data['start']['longitude'])
     lat_2 = float(request.data['end']['latitude'])
@@ -73,6 +84,17 @@ def PassengerNewOrderView(request):
         })
 
     data = request.data
+
+    if data['start']['name'] == '' or data['start']['address'] == '':
+        data['start']['name'], data['start']['address'] = \
+            getPOI(data['start']['latitude'],
+                   data['start']['longitude'])
+
+    if data['end']['name'] == '' or data['end']['address'] == '':
+        data['end']['name'], data['end']['address'] = \
+            getPOI(data['end']['latitude'],
+                   data['end']['longitude'])
+
     Order.objects.create(
         passenger=Passenger.objects.get(id=passenger_id),
         start_POI_name=data['start']['name'],

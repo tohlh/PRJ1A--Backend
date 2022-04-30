@@ -1,3 +1,4 @@
+import requests
 from time import time
 from driver.models import *
 from passenger.models import *
@@ -6,6 +7,26 @@ from django.db.models import Q
 from django.utils import timezone
 from datetime import timedelta
 from math import radians, cos, sin, asin, sqrt
+
+
+BAIDU_APP_KEY = 'XnfPPmndtYGWtZ8869ECQKOuks4p89P4'
+
+
+def getPOI(latitude, longitude):
+    params = {
+        'ak': BAIDU_APP_KEY,
+        'output': 'json',
+        'coordtype': 'gcj02ll',
+        'ret_coordtype': 'gcj02ll',
+        'extensions_poi': 5,
+        'location': f'{latitude},{longitude}',
+    }
+    response = requests.get(
+        "https://api.map.baidu.com/reverse_geocoding/v3/",
+        params=params
+    ).json()
+    return response['result']['pois'][0]['name'], \
+        response['result']['pois'][0]['addr']
 
 
 def calc_distance(lat_1, long_1, lat_2, long_2):
