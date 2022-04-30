@@ -15,30 +15,28 @@ def PassengerEstimatePriceView(request):
 
     if passenger_unregistered(passenger_id):
         return unregistered_response({
-            'errMsg': 'Please complete the registration.'
+            'errMsg': '请填写个人资料。'
         })
 
     data = request.data
+
+    if data['start']['name'] == '' or data['start']['address'] == '':
+        data['start']['name'], data['start']['address'] = \
+            getPOI(data['start']['latitude'],
+                   data['start']['longitude'])
+
+    if data['end']['name'] == '' or data['end']['address'] == '':
+        data['end']['name'], data['end']['address'] = \
+            getPOI(data['end']['latitude'],
+                   data['end']['longitude'])
+
     lat_1 = float(request.data['start']['latitude'])
     long_1 = float(request.data['start']['longitude'])
     lat_2 = float(request.data['end']['latitude'])
     long_2 = float(request.data['end']['longitude'])
 
     payload = {
-        'points': [
-            {
-                'address': data['start']['address'],
-                'name': data['start']['name'],
-                'latitude': lat_1,
-                'longitude': long_1,
-            },
-            {
-                'address': data['end']['address'],
-                'name': data['end']['name'],
-                'latitude': lat_2,
-                'longitude': long_2,
-            }
-        ],
+        'points': get_direction(lat_1, long_1, lat_2, long_2),
         'distance': calc_distance(lat_1, long_1, lat_2, long_2),
         'price': str(est_price(lat_1, long_1, lat_2, long_2))
     }
@@ -55,7 +53,7 @@ def PassengerNewOrderView(request):
 
     if passenger_unregistered(passenger_id):
         return unregistered_response({
-            'errMsg': 'Please complete the registration.'
+            'errMsg': '请填写个人资料。'
         })
 
     if Order.objects.filter(
@@ -63,16 +61,27 @@ def PassengerNewOrderView(request):
         status=5
     ).exists():
         return bad_request_response({
-            'errMsg': 'You have an unpaid order.'
+            'errMsg': '请支付未付款的订单。'
         })
 
     if pending_order_exists(passenger_id) or \
        current_order_exists(passenger_id):
         return bad_request_response({
-            'errMsg': 'You already have an active order.'
+            'errMsg': '您已经下单了。'
         })
 
     data = request.data
+
+    if data['start']['name'] == '' or data['start']['address'] == '':
+        data['start']['name'], data['start']['address'] = \
+            getPOI(data['start']['latitude'],
+                   data['start']['longitude'])
+
+    if data['end']['name'] == '' or data['end']['address'] == '':
+        data['end']['name'], data['end']['address'] = \
+            getPOI(data['end']['latitude'],
+                   data['end']['longitude'])
+
     Order.objects.create(
         passenger=Passenger.objects.get(id=passenger_id),
         start_POI_name=data['start']['name'],
@@ -113,8 +122,13 @@ def PassengerGetOrderView(request):
 
     if passenger_unregistered(passenger_id):
         return unregistered_response({
-            'errMsg': 'Please complete the registration.'
+            'errMsg': '请填写个人资料。'
         })
+
+    if unpaid_order_exists(passenger_id):
+        unpaid_order = get_unpaid_order(passenger_id)
+        serializer = PassengerCompletedOrderSerializer(unpaid_order)
+        return payload_response(serializer.data)
 
     if not (pending_order_exists(passenger_id) or
             current_order_exists(passenger_id)):
@@ -124,16 +138,15 @@ def PassengerGetOrderView(request):
 
     if order.driver is None:
         return bad_request_response({
-            'errMsg': 'No driver assigned.'
+            'errMsg': '还没安排司机。'
         })
-
     order.distance = calc_distance(
         order.start_POI_lat,
         order.start_POI_long,
         order.end_POI_lat,
         order.end_POI_long
     )
-    serializer = PassengerOrderSerializer(order)
+    serializer = PassengerOngoingOrderSerializer(order)
     return payload_response(serializer.data)
 
 
@@ -146,19 +159,19 @@ def PassengerCancelOrderView(request):
 
     if passenger_unregistered(passenger_id):
         return unregistered_response({
-            'errMsg': 'Please complete the registration.'
+            'errMsg': '请填写个人资料。'
         })
 
     if not (pending_order_exists(passenger_id) or
             current_order_exists(passenger_id)):
         return bad_request_response({
-            'errMsg': 'You do not have an active order'
+            'errMsg': '您目前没有订单。'
         })
 
     current_order = get_current_order(passenger_id)
     if current_order.status >= 2:
         return bad_request_response({
-            'errMsg': 'You are not allowed to cancel the order'
+            'errMsg': '当前阶段不允许取消订单。'
         })
 
     cancel_current_order(passenger_id)
@@ -174,13 +187,13 @@ def PassengerUpdateLocationView(request):
 
     if passenger_unregistered(passenger_id):
         return unregistered_response({
-            'errMsg': 'Please complete the registration.'
+            'errMsg': '请填写个人资料。'
         })
 
     if not (pending_order_exists(passenger_id) or
             current_order_exists(passenger_id)):
         return bad_request_response({
-            'errMsg': 'You do not have an active order.'
+            'errMsg': '您目前没有订单。'
         })
 
     data = request.data
@@ -220,17 +233,18 @@ def PassengerListOrdersView(request):
 
     if passenger_unregistered(passenger_id):
         return unregistered_response({
-            'errMsg': 'Please complete the registration.'
+            'errMsg': '请填写个人资料。'
         })
 
     offset = int(request.GET.get('offset', 0))
     limit = int(request.GET.get('limit', 10))
 
     orders = Order.objects.filter(
+        Q(status=3) | Q(status=4) | Q(status=6),
         passenger__id=passenger_id
     ).order_by('-created_at')
     orders = orders[offset:offset+limit]
-    serializer = PassengerOrderSerializer(
+    serializer = PassengerCompletedOrderSerializer(
         orders,
         many=True
     )
@@ -246,27 +260,7 @@ def PassengerCurrentOrderView(request):
 
     if passenger_unregistered(passenger_id):
         return unregistered_response({
-            'errMsg': 'Please complete the registration.'
-        })
-
-    if not (pending_order_exists(passenger_id) or
-            current_order_exists(passenger_id)):
-
-        unpaid_order = Order.objects.filter(
-            passenger__id=passenger_id,
-            status=5
-        )
-
-        if unpaid_order.exists():
-            unpaid_order = unpaid_order.first()
-            return payload_response({
-                'status': 5,
-                'price': unpaid_order.real_price,
-                'distance': unpaid_order.distance
-            })
-
-        return payload_response({
-            'status': -1
+            'errMsg': '请填写个人资料。'
         })
 
     if pending_order_exists(passenger_id):
@@ -282,6 +276,20 @@ def PassengerCurrentOrderView(request):
             'distance': current_order.distance
         })
 
+    if not (pending_order_exists(passenger_id) or
+            current_order_exists(passenger_id)):
+        if unpaid_order_exists(passenger_id):
+            unpaid_order = get_unpaid_order(passenger_id)
+            return payload_response({
+                'status': 5,
+                'price': unpaid_order.real_price,
+                'distance': unpaid_order.distance
+            })
+
+    return payload_response({
+        'status': -1
+    })
+
 
 @api_view(('POST',))
 def PassengerPayOrderView(request):
@@ -292,7 +300,7 @@ def PassengerPayOrderView(request):
 
     if passenger_unregistered(passenger_id):
         return unregistered_response({
-            'errMsg': 'Please complete the registration.'
+            'errMsg': '请填写个人资料。'
         })
 
     Order.objects.filter(

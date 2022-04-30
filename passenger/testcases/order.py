@@ -105,7 +105,7 @@ class PassengerCreateOrderTest(TestCase):
                     39.9136172322172,
                     116.39729231302886
                 ),
-                status=1,
+                status=6,
                 updated_at=timezone.now() - timedelta(minutes=5)
             )
 
@@ -312,7 +312,7 @@ class PassengerCreateOrderTest(TestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-        for x in range(0, 20):
+        for x in range(0, 10):
             self.assertEqual(
                 response.data[x]['start']['name'],
                 f'清华大学{89 - x}'
