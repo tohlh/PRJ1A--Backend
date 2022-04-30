@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'passenger.apps.PassengerConfig',
     'driver.apps.DriverConfig',
     'order.apps.OrderConfig',
+    'message.apps.MessageConfig',
     'corsheaders',
     'rest_framework',
 ]

@@ -19,6 +19,9 @@ urlpatterns = [
      path('info',
           PassengerInfoView,
           name='passenger_info'),
+     path('info/reset',
+          PassengerResetInfoView,
+          name='passenger_info_reset'),
      # passenger's order
      path('order/est-price',
           PassengerEstimatePriceView,

@@ -43,3 +43,21 @@ def PassengerInfoView(request):
         return passenger_info_response(passenger_id)
 
     return internal_error_response()
+
+
+@api_view(('POST',))
+def PassengerResetInfoView(request):
+    permission_classes = (IsAuthenticated,)
+    if not is_passenger(request):
+        return unauthorized_response()
+    passenger_id = get_passenger_id(request)
+
+    Passenger.objects.filter(
+        id=passenger_id
+    ).update(
+            username='',
+            phone='',
+            age=None,
+            identification_no=''
+        )
+    return payload_response({})

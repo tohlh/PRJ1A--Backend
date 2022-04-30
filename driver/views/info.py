@@ -45,3 +45,22 @@ def DriverInfoView(request):
         return driver_info_response(driver_id)
 
     return internal_error_response()
+
+
+@api_view(('POST',))
+def DriverResetInfoView(request):
+    permission_classes = (IsAuthenticated,)
+    if not is_driver(request):
+        return unauthorized_response()
+    driver_id = get_driver_id(request)
+
+    Driver.objects.filter(
+        id=driver_id
+    ).update(
+            username='',
+            phone='',
+            carplate='',
+            age=None,
+            identification_no=''
+        )
+    return payload_response({})
