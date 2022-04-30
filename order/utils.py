@@ -43,39 +43,20 @@ def get_direction(lat_1, long_1, lat_2, long_2):
     ).json()
 
     routes = response['result']['routes'][0]['steps']
+    distance = response['result']['routes'][0]['distance'] / 1000
 
-    ret = []
+    combined_route = []
     for route in routes:
         path = route['path']
         coords = path.split(';')
         for coord in coords:
             latitude, longitude = coord.split(',')
-            ret.append({
+            combined_route.append({
                 'latitude': latitude,
                 'longitude': longitude
             })
 
-    return ret
-
-
-def calc_distance(lat_1, long_1, lat_2, long_2):
-    lat_1 = radians(lat_1)
-    long_1 = radians(long_1)
-    lat_2 = radians(lat_2)
-    long_2 = radians(long_2)
-
-    d_lat = lat_2 - lat_1
-    d_long = long_2 - long_1
-    a = sin(d_lat / 2)**2 + cos(lat_1) * cos(lat_2) * sin(d_long / 2)**2
-    c = 2 * asin(sqrt(a))
-    r = 6371
-    return(c * r)
-
-
-def est_price(lat_1, long_1, lat_2, long_2):
-    ret = 10 * calc_distance(lat_1, long_1, lat_2, long_2)
-    ret = round(ret, 2)
-    return ret
+    return combined_route, distance
 
 
 def pending_passenger_orders():
