@@ -25,7 +25,7 @@ SECRET_KEY = '9n4h2raynew4azi@b&7qu#el2bsx2_645fial^@mw+h&rv1g*q'
 DEBUG = True
 
 ALLOWED_HOSTS = ['PRJ1A--Backend-Error404.app.secoder.net', 'localhost']
-
+CSRF_TRUSTED_ORIGINS = ['https://prj1a--backend-error404.app.secoder.net']
 
 # Application definition
 
