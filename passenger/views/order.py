@@ -35,10 +35,11 @@ def PassengerEstimatePriceView(request):
     lat_2 = float(request.data['end']['latitude'])
     long_2 = float(request.data['end']['longitude'])
 
+    points, distance = get_direction(lat_1, long_1, lat_2, long_2)
     payload = {
-        'points': get_direction(lat_1, long_1, lat_2, long_2),
-        'distance': calc_distance(lat_1, long_1, lat_2, long_2),
-        'price': str(est_price(lat_1, long_1, lat_2, long_2))
+        'points': points,
+        'distance': distance,
+        'price': round(distance * 6, 2)
     }
     return payload_response(payload)
 

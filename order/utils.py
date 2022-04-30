@@ -43,42 +43,20 @@ def get_direction(lat_1, long_1, lat_2, long_2):
     ).json()
 
     routes = response['result']['routes'][0]['steps']
+    distance = response['result']['routes'][0]['distance'] / 1000
 
-    ret = []
+    combined_route = []
     for route in routes:
         path = route['path']
         coords = path.split(';')
         for coord in coords:
             latitude, longitude = coord.split(',')
-            ret.append({
+            combined_route.append({
                 'latitude': latitude,
                 'longitude': longitude
             })
 
-    return ret
-
-
-def calc_distance(lat_1, long_1, lat_2, long_2):
-    params = {
-        'ak': BAIDU_APP_KEY,
-        'coord_type': 'gcj02',
-        'ret_coordtype': 'gcj02',
-        'origin': f'{lat_1},{long_1}',
-        'destination': f'{lat_2},{long_2}',
-    }
-    response = requests.get(
-        "https://api.map.baidu.com/direction/v2/driving",
-        params=params
-    ).json()
-
-    distance = response['result']['routes'][0]['distance'] / 1000
-    return distance
-
-
-def est_price(lat_1, long_1, lat_2, long_2):
-    ret = 6 * calc_distance(lat_1, long_1, lat_2, long_2)
-    ret = round(ret, 2)
-    return ret
+    return combined_route, distance
 
 
 def pending_passenger_orders():
