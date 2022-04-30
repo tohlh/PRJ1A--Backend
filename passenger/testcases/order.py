@@ -1,7 +1,6 @@
 from datetime import timedelta
 from django.utils import timezone
 from order.models import Order
-from order.utils import est_price
 from passenger.models import Passenger
 from passenger.testcases.utils import *
 
@@ -99,12 +98,7 @@ class PassengerCreateOrderTest(TestCase):
                 end_POI_address="中国北京市东城区景山前街4号",
                 end_POI_lat=39.9136172322172,
                 end_POI_long=116.39729231302886,
-                est_price=est_price(
-                    39.99970025463166,
-                    116.32636879642432,
-                    39.9136172322172,
-                    116.39729231302886
-                ),
+                est_price=100,
                 status=6,
                 updated_at=timezone.now() - timedelta(minutes=5)
             )

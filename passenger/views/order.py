@@ -93,12 +93,7 @@ def PassengerNewOrderView(request):
         end_POI_address=data['end']['address'],
         end_POI_lat=float(data['end']['latitude']),
         end_POI_long=float(data['end']['longitude']),
-        est_price=est_price(
-            float(data['start']['latitude']),
-            float(data['start']['longitude']),
-            float(data['end']['latitude']),
-            float(data['end']['longitude'])
-        ),
+        est_price=100,
         updated_at=timezone.now(),
         status=0
     )
