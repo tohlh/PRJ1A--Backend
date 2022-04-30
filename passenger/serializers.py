@@ -1,8 +1,8 @@
 from rest_framework import serializers
 from order.models import Order
+from order.utils import *
 from driver.models import Driver
 from passenger.views.utils import *
-from order.utils import *
 
 
 class StartPointSerializer(serializers.Serializer):

@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from order.utils import *
 from order.models import Order
 from passenger.models import Passenger
 from driver.views.utils import *
@@ -30,14 +31,44 @@ class PassengerInfoSerializer(serializers.ModelSerializer):
         fields = ['username', 'phone']
 
 
-class DriverOrderSerializer(serializers.ModelSerializer):
+class RouteFieldSerializer(serializers.Serializer):
+    def to_representation(self, instance):
+        return get_direction(
+            instance.start_POI_lat,
+            instance.start_POI_long,
+            instance.end_POI_lat,
+            instance.end_POI_long
+        )
+
+
+class DriverOngoingOrderSerializer(serializers.ModelSerializer):
+    points = RouteFieldSerializer(source='*')
+    paths = PathsSerializer(source='*')
+    passenger = PassengerInfoSerializer()
+    price = serializers.DecimalField(source='est_price',
+                                     default='0',
+                                     max_digits=6,
+                                     decimal_places=2)
+
+    class Meta:
+        model = Order
+        fields = ['points', 'paths', 'id',
+                  'passenger', 'distance', 'price',
+                  'status']
+
+
+class DriverCompletedOrderSerializer(serializers.ModelSerializer):
     start = StartPointSerializer(source='*')
     end = EndPointSerializer(source='*')
     paths = PathsSerializer(source='*')
     passenger = PassengerInfoSerializer()
+    price = serializers.DecimalField(source='real_price',
+                                     default='0',
+                                     max_digits=6,
+                                     decimal_places=2)
 
     class Meta:
         model = Order
         fields = ['start', 'end', 'paths', 'id',
-                  'passenger', 'distance', 'est_price',
+                  'passenger', 'distance', 'real_price',
                   'status']
