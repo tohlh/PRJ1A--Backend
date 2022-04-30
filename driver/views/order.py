@@ -76,7 +76,7 @@ def DriverGetOrderView(request):
         current_order.end_POI_lat,
         current_order.end_POI_long
     )
-    serializer = DriverOrderSerializer(current_order)
+    serializer = DriverOngoingOrderSerializer(current_order)
     return payload_response(serializer.data)
 
 
@@ -175,7 +175,7 @@ def DriverListOrdersView(request):
         driver__id=driver_id
     ).order_by('-created_at')
     orders = orders[offset:offset+limit]
-    serializer = DriverOrderSerializer(
+    serializer = DriverCompletedOrderSerializer(
         orders,
         many=True
     )
