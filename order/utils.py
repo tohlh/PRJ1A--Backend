@@ -1,3 +1,5 @@
+import json
+import base64
 import requests
 from time import time
 from driver.models import *
@@ -71,6 +73,16 @@ def calc_distance(lat_1, long_1, lat_2, long_2):
     c = 2 * asin(sqrt(a))
     r = 6371
     return(c * r)
+
+
+def dict_list_to_base64_json(dict_list):
+    json_str = json.dumps(dict_list).encode('utf-8')
+    return base64.b64encode(json_str).decode('utf-8')
+
+
+def base64_json_to_dict_list(base64_str):
+    decoded_json_string = base64.b64decode(base64_str)
+    return json.loads(decoded_json_string)
 
 
 def pending_passenger_orders():
