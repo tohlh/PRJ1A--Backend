@@ -796,3 +796,15 @@ class DriverInvalidAuthTests(TestCase):
             **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
         )
         self.assertEqual(response.status_code, 401)
+
+    def test_end_order(self):
+        access_token, refresh_token, status_code = auth_passenger(self,
+                                                                  'superuser1')
+        self.assertEqual(status_code, 200)
+
+        response = self.client.post(
+            '/api/driver/order/end',
+            content_type='application/json',
+            **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
+        )
+        self.assertEqual(response.status_code, 401)
