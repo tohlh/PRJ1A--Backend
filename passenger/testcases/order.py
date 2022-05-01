@@ -789,3 +789,30 @@ class PassengerInvalidAuthTests(TestCase):
             **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
         )
         self.assertEqual(response.status_code, 401)
+
+    def test_create_order(self):
+        access_token, refresh_token, status_code = auth_driver(self,
+                                                               'superuser1')
+        self.assertEqual(status_code, 200)
+
+        payload = {
+            'start': {
+                'name': '清华大学',
+                'address': '北京市海淀区双清路30号',
+                'latitude': '39.99970025463166',
+                'longitude': '116.32636879642432',
+            },
+            'end': {
+                'name': '故宫博物院',
+                'address': '中国北京市东城区景山前街4号',
+                'latitude': '39.9136172322172',
+                'longitude': '116.39729231302886'
+            }
+        }
+        response = self.client.post(
+            '/api/passenger/order/new',
+            data=payload,
+            content_type='application/json',
+            **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
+        )
+        self.assertEqual(response.status_code, 401)
