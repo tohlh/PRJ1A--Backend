@@ -359,6 +359,48 @@ class PassengerCreateOrderTest(TestCase):
         )
         self.assertEqual(response.status_code, 200)
 
+    def test_invalid_cancel_order(self):
+        access_token, refresh_token, status_code = auth_passenger(self,
+                                                                  'superuser0')
+        self.assertEqual(status_code, 200)
+
+        payload = {
+            "start": {
+                "name": "清华大学",
+                "address": "北京市海淀区双清路30号",
+                "latitude": "39.99970025463166",
+                "longitude": "116.32636879642432"
+            },
+            "end": {
+                "name": "故宫博物院",
+                "address": "中国北京市东城区景山前街4号",
+                "latitude": "39.9136172322172",
+                "longitude": "116.39729231302886",
+            }
+        }
+        Order.objects.create(
+            passenger=Passenger.objects.get(id=1),
+            start_POI_name=payload['start']['name'],
+            start_POI_address=payload['start']['address'],
+            start_POI_lat=float(payload['start']['latitude']),
+            start_POI_long=float(payload['start']['longitude']),
+            end_POI_name=payload['end']['name'],
+            end_POI_address=payload['end']['address'],
+            end_POI_lat=float(payload['end']['latitude']),
+            end_POI_long=float(payload['end']['longitude']),
+            est_price=100,
+            updated_at=timezone.now(),
+            status=2
+        )
+        response = self.client.post(
+            '/api/passenger/order/cancel',
+            data=payload,
+            content_type='application/json',
+            **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.data['errMsg'], '当前阶段不允许取消订单。')
+
     def test_update_location(self):
         access_token, refresh_token, status_code = auth_passenger(self,
                                                                   'superuser0')
