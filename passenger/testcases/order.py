@@ -223,18 +223,19 @@ class PassengerCreateOrderTest(TestCase):
         )
         self.assertEqual(response.status_code, 400)
 
-    def test_get_current_order(self):
+    def test_get_order(self):
         access_token, refresh_token, status_code = auth_passenger(self,
                                                                   'superuser0')
         self.assertEqual(status_code, 200)
 
-        # No current order
+        # No active order
         response = self.client.get(
-            '/api/passenger/order/current',
+            '/api/passenger/order/get',
             content_type='application/json',
             **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
         )
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, None)
 
         payload = {
             "start": {
@@ -262,7 +263,7 @@ class PassengerCreateOrderTest(TestCase):
 
         # Check for the current order
         response = self.client.get(
-            '/api/passenger/order/current',
+            '/api/passenger/order/get',
             content_type='application/json',
             **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
         )
