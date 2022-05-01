@@ -592,3 +592,10 @@ class DriverUnregisteredTests(TestCase):
             content_type='application/json',
         )
         self.assertEqual(response.status_code, 402)
+
+    def test_pay_order(self):
+        response = self.client.post(
+            '/api/passenger/order/paid',
+            content_type='application/json',
+        )
+        self.assertEqual(response.status_code, 402)
