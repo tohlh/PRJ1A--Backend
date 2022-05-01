@@ -1,4 +1,3 @@
-import driver
 from driver.models import *
 from driver.views.utils import *
 from driver.serializers import *

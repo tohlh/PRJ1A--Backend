@@ -71,6 +71,12 @@ def PassengerNewOrderView(request):
             'errMsg': '您已经下单了。'
         })
 
+    passenger = Passenger.objects.get(id=passenger_id)
+    if passenger.latitude == '' or passenger.longitude == '':
+        return bad_request_response({
+            'errMsg': '请更新您的位置。'
+        })
+
     data = request.data
 
     if data['start']['name'] == '' or data['start']['address'] == '':
@@ -98,12 +104,6 @@ def PassengerNewOrderView(request):
         status=0
     )
 
-    Passenger.objects.filter(
-        id=passenger_id
-    ).update(
-        latitude=float(data['start']['latitude']),
-        longitude=float(data['start']['longitude'])
-    )
     match_orders()
 
     return payload_response({})
@@ -180,12 +180,6 @@ def PassengerUpdateLocationView(request):
     if passenger_unregistered(passenger_id):
         return unregistered_response({
             'errMsg': '请填写个人资料。'
-        })
-
-    if not (pending_order_exists(passenger_id) or
-            current_order_exists(passenger_id)):
-        return bad_request_response({
-            'errMsg': '您目前没有订单。'
         })
 
     data = request.data

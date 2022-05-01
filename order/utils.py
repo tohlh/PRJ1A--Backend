@@ -109,12 +109,12 @@ def match_orders():
 
     for order in orders:
         for driver in drivers:
-            order_lat = order.start_POI_lat
-            order_long = order.start_POI_long
-            driver_lat = driver.latitude
-            driver_long = driver.longitude
-            dist_between = calc_distance(order_lat, order_long,
-                                         driver_lat, driver_long)
+            dist_between = calc_distance(
+                order.start_POI_lat,
+                order.start_POI_long,
+                driver.latitude,
+                driver.longitude
+            )
 
             if dist_between <= 15:
                 Order.objects.filter(id=order.id).update(
