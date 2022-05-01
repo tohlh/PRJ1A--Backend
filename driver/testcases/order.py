@@ -277,3 +277,105 @@ class DriverOrderTests(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['status'], 2)
+
+    def test_price_increment(self):
+        # Driver being online
+        access_token, refresh_token, status_code = auth_driver(self,
+                                                               'superuser1')
+        self.assertEqual(status_code, 200)
+
+        payload = {
+            "latitude": '39.9136172322172',
+            "longitude": '116.39729231302886'
+        }
+        response = self.client.post(
+            '/api/driver/order/update-location',
+            data=payload,
+            content_type='application/json',
+            **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
+        )
+        self.assertEqual(response.status_code, 200)
+
+        # Passenger creates a new order
+        access_token, refresh_token, status_code = auth_passenger(self,
+                                                                  'superuser0')
+        self.assertEqual(status_code, 200)
+
+        payload = {
+            "latitude": 39.99970025463180,
+            "longitude": 116.32636879642432
+        }
+        response = self.client.post(
+            '/api/passenger/order/update-location',
+            data=payload,
+            content_type='application/json',
+            **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
+        )
+        self.assertEqual(response.status_code, 200)
+
+        payload = {
+            "start": {
+                "name": "清华大学",
+                "address": "北京市海淀区双清路30号",
+                "latitude": "39.99970025463166",
+                "longitude": "116.32636879642432"
+            },
+            "end": {
+                "name": "故宫博物院",
+                "address": "中国北京市东城区景山前街4号",
+                "latitude": "39.9136172322172",
+                "longitude": "116.39729231302886",
+            }
+        }
+        response = self.client.post(
+            '/api/passenger/order/new',
+            data=payload,
+            content_type='application/json',
+            **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
+        )
+        self.assertEqual(response.status_code, 200)
+
+        # Driver picks up passenger
+        access_token, refresh_token, status_code = auth_driver(self,
+                                                               'superuser1')
+        self.assertEqual(status_code, 200)
+
+        response = self.client.post(
+            '/api/driver/order/pickup',
+            content_type='application/json',
+            **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
+        )
+
+        response = self.client.get(
+            '/api/driver/order/current',
+            content_type='application/json',
+            **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['status'], 2)
+
+        for i in range(0, 100):
+            payload = {
+                "latitude": 39.9136172322172 + i * 0.01,
+                "longitude": 116.39729231302886
+            }
+            response = self.client.post(
+                '/api/driver/order/update-location',
+                data=payload,
+                content_type='application/json',
+                **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
+            )
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.data, {
+                "latitude": 39.99970025463180,
+                "longitude": 116.32636879642432
+            })
+
+        response = self.client.get(
+            '/api/driver/order/current',
+            content_type='application/json',
+            **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertNotEqual(response.data['price'], 0)
+        self.assertNotEqual(response.data['distance'], 0)
