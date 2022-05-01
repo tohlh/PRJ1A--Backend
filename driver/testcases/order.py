@@ -736,3 +736,10 @@ class DriverUnregisteredTests(TestCase):
         )
         self.assertEqual(response.status_code, 402)
         self.assertEqual(response.data['errMsg'], '请填写个人资料。')
+
+
+class DriverInvalidAuthTests(TestCase):
+    def setUp(self):
+        Driver.objects.create(id=1)
+        access_token, refresh_token, status_code = auth_driver(self,
+                                                               'superuser1')
