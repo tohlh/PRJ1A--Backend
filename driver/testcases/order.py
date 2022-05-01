@@ -576,6 +576,10 @@ class DriverOrderTests(TestCase):
         self.assertEqual(response.data, {})
 
 
+class DriverUnauthenticatedTests(TestCase):
+    def setUp(self):
+        pass
+
 class DriverUnregisteredTests(TestCase):
     def setUp(self):
         Driver.objects.create(id=1)
