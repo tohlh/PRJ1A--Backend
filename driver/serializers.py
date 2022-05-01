@@ -68,7 +68,7 @@ class DriverOngoingOrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ['points', 'paths', 'id',
+        fields = ['start', 'end', 'points', 'paths', 'id',
                   'passenger', 'distance', 'price',
                   'status']
 
