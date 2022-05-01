@@ -21,10 +21,22 @@ class EndPointSerializer(serializers.Serializer):
     longitude = serializers.FloatField(source='end_POI_long')
 
 
-class PathsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Order
-        fields = ['before_pickup_path', 'after_pickup_path']
+class PathFieldSerializer(serializers.Serializer):
+    def to_representation(self, instance):
+        before_pickup = instance.before_pickup_path
+        if before_pickup == '':
+            before_pickup = dict_list_to_base64_json([])
+        before_pickup = base64_json_to_dict_list(before_pickup)
+
+        after_pickup = instance.after_pickup_path
+        if after_pickup == '':
+            after_pickup = dict_list_to_base64_json([])
+        after_pickup = base64_json_to_dict_list(after_pickup)
+
+        return {
+            'before_pickup_path': before_pickup,
+            'after_pickup_path': after_pickup
+        }
 
 
 class PassengerInfoSerializer(serializers.ModelSerializer):
@@ -33,7 +45,7 @@ class PassengerInfoSerializer(serializers.ModelSerializer):
         fields = ['username', 'phone']
 
 
-class RouteFieldSerializer(serializers.Serializer):
+class DirectionFieldSerializer(serializers.Serializer):
     def to_representation(self, instance):
         return get_direction(
             instance.start_POI_lat,
@@ -46,8 +58,8 @@ class RouteFieldSerializer(serializers.Serializer):
 class DriverOngoingOrderSerializer(serializers.ModelSerializer):
     start = StartPointSerializer(source='*')
     end = EndPointSerializer(source='*')
-    points = RouteFieldSerializer(source='*')
-    paths = PathsSerializer(source='*')
+    points = DirectionFieldSerializer(source='*')
+    paths = PathFieldSerializer(source='*')
     passenger = PassengerInfoSerializer()
     price = serializers.DecimalField(source='est_price',
                                      default='0',
@@ -64,7 +76,7 @@ class DriverOngoingOrderSerializer(serializers.ModelSerializer):
 class DriverCompletedOrderSerializer(serializers.ModelSerializer):
     start = StartPointSerializer(source='*')
     end = EndPointSerializer(source='*')
-    paths = PathsSerializer(source='*')
+    paths = PathFieldSerializer(source='*')
     passenger = PassengerInfoSerializer()
     price = serializers.DecimalField(source='real_price',
                                      default='0',
