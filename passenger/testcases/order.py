@@ -840,3 +840,15 @@ class PassengerInvalidAuthTests(TestCase):
             **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
         )
         self.assertEqual(response.status_code, 401)
+
+    def test_cancel_order(self):
+        access_token, refresh_token, status_code = auth_driver(self,
+                                                               'superuser1')
+        self.assertEqual(status_code, 200)
+
+        response = self.client.post(
+            '/api/passenger/order/cancel',
+            content_type='application/json',
+            **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
+        )
+        self.assertEqual(response.status_code, 401)
