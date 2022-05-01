@@ -588,7 +588,14 @@ class DriverUnauthenticatedTests(TestCase):
         response = self.client.post(
             '/api/driver/order/update-location',
             data=payload,
-            content_type='application/json',
+            content_type='application/json'
+        )
+        self.assertEqual(response.status_code, 401)
+
+    def test_get_order(self):
+        response = self.client.get(
+            '/api/driver/order/get',
+            content_type='application/json'
         )
         self.assertEqual(response.status_code, 401)
 
