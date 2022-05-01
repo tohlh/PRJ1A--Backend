@@ -606,3 +606,10 @@ class PassengerUnauthenticatedTests(TestCase):
             content_type='application/json',
         )
         self.assertEqual(response.status_code, 401)
+
+    def test_list_orders(self):
+        response = self.client.get(
+            '/api/passenger/order/list',
+            content_type='application/json',
+        )
+        self.assertEqual(response.status_code, 401)
