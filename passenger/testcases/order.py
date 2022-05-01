@@ -757,3 +757,8 @@ class PassengerUnregisteredTests(TestCase):
         )
         self.assertEqual(response.status_code, 402)
         self.assertEqual(response.data['errMsg'], '请填写个人资料。')
+
+
+class PassengerInvalidAuthTests(TestCase):
+    def setUp(self):
+        pass
