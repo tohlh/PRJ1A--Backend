@@ -1,9 +1,5 @@
 import jwt
-import json
-import base64
 import decimal
-from datetime import timedelta
-from django.utils import timezone
 from django.db.models import Q
 from prj1a.settings import SIMPLE_JWT
 from rest_framework.response import Response
@@ -57,16 +53,6 @@ def get_current_order(driver_id):
         driver__id=driver_id
     )
     return current_order
-
-
-def dict_list_to_base64_json(dict_list):
-    json_str = json.dumps(dict_list).encode('utf-8')
-    return base64.b64encode(json_str).decode('utf-8')
-
-
-def base64_json_to_dict_list(base64_str):
-    decoded_json_string = base64.b64decode(base64_str)
-    return json.loads(decoded_json_string)
 
 
 def record_path(driver_id, latitude, longitude):
