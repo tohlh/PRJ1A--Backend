@@ -182,12 +182,6 @@ def PassengerUpdateLocationView(request):
             'errMsg': '请填写个人资料。'
         })
 
-    if not (pending_order_exists(passenger_id) or
-            current_order_exists(passenger_id)):
-        return bad_request_response({
-            'errMsg': '您目前没有订单。'
-        })
-
     data = request.data
     keys = ['latitude', 'longitude']
     for key in keys:
