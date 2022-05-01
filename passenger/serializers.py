@@ -22,7 +22,7 @@ class EndPointSerializer(serializers.Serializer):
 class DriverInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Driver
-        fields = ['carplate', 'phone']
+        fields = ['username', 'carplate', 'phone']
 
 
 class DirectionFieldSerializer(serializers.Serializer):
