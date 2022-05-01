@@ -52,8 +52,8 @@ def get_direction(lat_1, long_1, lat_2, long_2):
         for coord in coords:
             latitude, longitude = coord.split(',')
             combined_route.append({
-                'latitude': latitude,
-                'longitude': longitude
+                'latitude': float(latitude),
+                'longitude': float(longitude)
             })
 
     return combined_route, distance
