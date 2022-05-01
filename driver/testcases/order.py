@@ -580,6 +580,19 @@ class DriverUnauthenticatedTests(TestCase):
     def setUp(self):
         pass
 
+    def test_update_location(self):
+        payload = {
+            "latitude": 39.99970025463180,
+            "longitude": 116.32636879642432
+        }
+        response = self.client.post(
+            '/api/driver/order/update-location',
+            data=payload,
+            content_type='application/json',
+        )
+        self.assertEqual(response.status_code, 401)
+
+
 class DriverUnregisteredTests(TestCase):
     def setUp(self):
         Driver.objects.create(id=1)
