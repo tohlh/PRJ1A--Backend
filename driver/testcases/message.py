@@ -57,3 +57,10 @@ class PassengerEstimatePriceTest(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 100)
+
+    def test_unauthenticated(self):
+        response = self.client.get(
+            '/api/driver/msg',
+            content_type='application/json',
+        )
+        self.assertEqual(response.status_code, 401)
