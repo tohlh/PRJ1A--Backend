@@ -25,7 +25,7 @@ class DriverInfoSerializer(serializers.ModelSerializer):
         fields = ['carplate', 'phone']
 
 
-class RouteFieldSerializer(serializers.Serializer):
+class DirectionFieldSerializer(serializers.Serializer):
     def to_representation(self, instance):
         ret, _ = get_direction(
             instance.start_POI_lat,
@@ -36,6 +36,15 @@ class RouteFieldSerializer(serializers.Serializer):
         return ret
 
 
+class PathFieldSerializer(serializers.Serializer):
+    def to_representation(self, instance):
+        path_list = instance.before_pickup_path
+        if path_list == '':
+            path_list = dict_list_to_base64_json([])
+        path_list = base64_json_to_dict_list(path_list)
+        return path_list
+
+
 class PassengerOngoingOrderSerializer(serializers.ModelSerializer):
     start = StartPointSerializer(source='*')
     end = EndPointSerializer(source='*')
@@ -43,7 +52,7 @@ class PassengerOngoingOrderSerializer(serializers.ModelSerializer):
     price = serializers.DecimalField(source='est_price',
                                      max_digits=6,
                                      decimal_places=2)
-    points = RouteFieldSerializer(source='*')
+    points = DirectionFieldSerializer(source='*')
 
     class Meta:
         model = Order
@@ -59,9 +68,10 @@ class PassengerCompletedOrderSerializer(serializers.ModelSerializer):
     price = serializers.DecimalField(source='real_price',
                                      max_digits=6,
                                      decimal_places=2)
+    points = PathFieldSerializer(source='*')
 
     class Meta:
         model = Order
         fields = ['start', 'end', 'id',
                   'driver', 'distance', 'price',
-                  'status']
+                  'status', 'points']
