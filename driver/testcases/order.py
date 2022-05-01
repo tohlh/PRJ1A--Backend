@@ -574,3 +574,28 @@ class DriverOrderTests(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data, {})
+
+
+class DriverUnregisteredTests(TestCase):
+    def setUp(self):
+        Driver.objects.create(id=1)
+        access_token, refresh_token, status_code = auth_driver(self,
+                                                               'superuser1')
+
+    def test_update_location(self):
+        access_token, refresh_token, status_code = auth_driver(self,
+                                                               'superuser1')
+        self.assertEqual(status_code, 200)
+
+        payload = {
+            "latitude": 39.99970025463180,
+            "longitude": 116.32636879642432
+        }
+        response = self.client.post(
+            '/api/driver/order/update-location',
+            data=payload,
+            content_type='application/json',
+            **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
+        )
+        self.assertEqual(response.status_code, 402)
+        self.assertEqual(response.data['errMsg'], '请填写个人资料。')
