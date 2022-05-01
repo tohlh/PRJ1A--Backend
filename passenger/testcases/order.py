@@ -522,7 +522,7 @@ class PassengerOrderTests(TestCase):
             )
 
 
-class DriverUnregisteredTests(TestCase):
+class PassengerUnauthenticatedTests(TestCase):
     def setUp(self):
         Passenger.objects.create(id=1)
         access_token, refresh_token, status_code = auth_driver(self,
@@ -548,7 +548,7 @@ class DriverUnregisteredTests(TestCase):
             data=payload,
             content_type='application/json',
         )
-        self.assertEqual(response.status_code, 402)
+        self.assertEqual(response.status_code, 401)
 
     def test_create_order(self):
         payload = {
@@ -570,32 +570,32 @@ class DriverUnregisteredTests(TestCase):
             data=payload,
             content_type='application/json',
         )
-        self.assertEqual(response.status_code, 402)
+        self.assertEqual(response.status_code, 401)
 
     def test_get_order(self):
         response = self.client.get(
             '/api/passenger/order/get',
             content_type='application/json',
         )
-        self.assertEqual(response.status_code, 402)
+        self.assertEqual(response.status_code, 401)
 
     def test_current_order(self):
         response = self.client.get(
             '/api/passenger/order/current',
             content_type='application/json',
         )
-        self.assertEqual(response.status_code, 402)
+        self.assertEqual(response.status_code, 401)
 
     def test_cancel_order(self):
         response = self.client.post(
             '/api/passenger/order/cancel',
             content_type='application/json',
         )
-        self.assertEqual(response.status_code, 402)
+        self.assertEqual(response.status_code, 401)
 
     def test_pay_order(self):
         response = self.client.post(
             '/api/passenger/order/paid',
             content_type='application/json',
         )
-        self.assertEqual(response.status_code, 402)
+        self.assertEqual(response.status_code, 401)
