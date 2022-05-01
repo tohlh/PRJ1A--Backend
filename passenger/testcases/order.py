@@ -571,3 +571,10 @@ class DriverUnregisteredTests(TestCase):
             content_type='application/json',
         )
         self.assertEqual(response.status_code, 401)
+
+    def test_get_order(self):
+        response = self.client.get(
+            '/api/passenger/order/get',
+            content_type='application/json',
+        )
+        self.assertEqual(response.status_code, 401)
