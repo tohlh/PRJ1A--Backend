@@ -14,7 +14,8 @@ class DriverOrderTests(TestCase):
         )
 
     def test_queue_order(self):
-        access_token, refresh_token, status_code = authenticate(self)
+        access_token, refresh_token, status_code = auth_driver(self,
+                                                               'superuser1')
         self.assertEqual(status_code, 200)
         response = self.client.get(
             '/api/driver/info',
@@ -23,7 +24,8 @@ class DriverOrderTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_update_location(self):
-        access_token, refresh_token, status_code = authenticate(self)
+        access_token, refresh_token, status_code = auth_driver(self,
+                                                               'superuser1')
         self.assertEqual(status_code, 200)
         response = self.client.get(
             '/api/driver/info',

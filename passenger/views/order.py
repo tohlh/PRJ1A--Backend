@@ -132,11 +132,7 @@ def PassengerGetOrderView(request):
 
     order = get_current_order(passenger_id)
 
-    if order.driver is None:
-        return bad_request_response({
-            'errMsg': '还没安排司机。'
-        })
-    order.distance = calc_distance(
+    _, order.distance = get_direction(
         order.start_POI_lat,
         order.start_POI_long,
         order.end_POI_lat,
