@@ -744,3 +744,16 @@ class PassengerUnregisteredTests(TestCase):
         )
         self.assertEqual(response.status_code, 402)
         self.assertEqual(response.data['errMsg'], '请填写个人资料。')
+
+    def test_list_orders(self):
+        access_token, refresh_token, status_code = auth_passenger(self,
+                                                                  'superuser0')
+        self.assertEqual(status_code, 200)
+
+        response = self.client.get(
+            '/api/passenger/order/list',
+            content_type='application/json',
+            **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
+        )
+        self.assertEqual(response.status_code, 402)
+        self.assertEqual(response.data['errMsg'], '请填写个人资料。')
