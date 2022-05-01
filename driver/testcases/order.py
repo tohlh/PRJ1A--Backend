@@ -743,3 +743,92 @@ class DriverInvalidAuthTests(TestCase):
         Driver.objects.create(id=1)
         access_token, refresh_token, status_code = auth_driver(self,
                                                                'superuser1')
+
+    def test_update_location(self):
+        access_token, refresh_token, status_code = auth_passenger(self,
+                                                                  'superuser1')
+        self.assertEqual(status_code, 200)
+
+        payload = {
+            "latitude": 39.99970025463180,
+            "longitude": 116.32636879642432
+        }
+        response = self.client.post(
+            '/api/driver/order/update-location',
+            data=payload,
+            content_type='application/json',
+            **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
+        )
+        self.assertEqual(response.status_code, 401)
+
+    def test_get_order(self):
+        access_token, refresh_token, status_code = auth_passenger(self,
+                                                                  'superuser1')
+        self.assertEqual(status_code, 200)
+
+        response = self.client.get(
+            '/api/driver/order/get',
+            content_type='application/json',
+            **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
+        )
+        self.assertEqual(response.status_code, 401)
+
+    def test_current_order(self):
+        access_token, refresh_token, status_code = auth_passenger(self,
+                                                                  'superuser1')
+        self.assertEqual(status_code, 200)
+
+        response = self.client.get(
+            '/api/driver/order/current',
+            content_type='application/json',
+            **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
+        )
+        self.assertEqual(response.status_code, 401)
+
+    def test_pickup_order(self):
+        access_token, refresh_token, status_code = auth_passenger(self,
+                                                                  'superuser1')
+        self.assertEqual(status_code, 200)
+
+        response = self.client.post(
+            '/api/driver/order/pickup',
+            content_type='application/json',
+            **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
+        )
+        self.assertEqual(response.status_code, 401)
+
+    def test_end_order(self):
+        access_token, refresh_token, status_code = auth_passenger(self,
+                                                                  'superuser1')
+        self.assertEqual(status_code, 200)
+
+        response = self.client.post(
+            '/api/driver/order/end',
+            content_type='application/json',
+            **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
+        )
+        self.assertEqual(response.status_code, 401)
+
+    def test_cancel_order(self):
+        access_token, refresh_token, status_code = auth_passenger(self,
+                                                                  'superuser1')
+        self.assertEqual(status_code, 200)
+
+        response = self.client.post(
+            '/api/driver/order/cancel',
+            content_type='application/json',
+            **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
+        )
+        self.assertEqual(response.status_code, 401)
+
+    def test_list_orders(self):
+        access_token, refresh_token, status_code = auth_passenger(self,
+                                                                  'superuser1')
+        self.assertEqual(status_code, 200)
+
+        response = self.client.get(
+            '/api/driver/order/list',
+            content_type='application/json',
+            **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
+        )
+        self.assertEqual(response.status_code, 401)
