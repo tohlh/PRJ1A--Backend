@@ -27,12 +27,13 @@ class DriverInfoSerializer(serializers.ModelSerializer):
 
 class RouteFieldSerializer(serializers.Serializer):
     def to_representation(self, instance):
-        return get_direction(
+        ret, _ = get_direction(
             instance.start_POI_lat,
             instance.start_POI_long,
             instance.end_POI_lat,
             instance.end_POI_long
         )
+        return ret
 
 
 class PassengerOngoingOrderSerializer(serializers.ModelSerializer):
