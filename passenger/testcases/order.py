@@ -108,7 +108,7 @@ class PassengerEstimatePriceTest(TestCase):
         self.assertEqual(response.status_code, 405)
 
 
-class PassengerCreateOrderTest(TestCase):
+class PassengerOrderTests(TestCase):
     def setUp(self):
         Passenger.objects.create(
             id=1,
@@ -520,3 +520,32 @@ class PassengerCreateOrderTest(TestCase):
                 response.data[x]['start']['name'],
                 f'清华大学{89 - x}'
             )
+
+
+class DriverUnregisteredTests(TestCase):
+    def setUp(self):
+        Passenger.objects.create(id=1)
+        access_token, refresh_token, status_code = auth_driver(self,
+                                                               'superuser1')
+
+    def test_est_price(self):
+        payload = {
+            'start': {
+                'name': '清华大学',
+                'address': '北京市海淀区双清路30号',
+                'latitude': '39.99970025463166',
+                'longitude': '116.32636879642432',
+            },
+            'end': {
+                'name': '故宫博物院',
+                'address': '中国北京市东城区景山前街4号',
+                'latitude': '39.9136172322172',
+                'longitude': '116.39729231302886'
+            }
+        }
+        response = self.client.post(
+            '/api/passenger/order/est-price',
+            data=payload,
+            content_type='application/json',
+        )
+        self.assertEqual(response.status_code, 401)
