@@ -6,12 +6,14 @@ class DriverTokenTest(TestCase):
         pass
 
     def test_obtain_driver_token_pair(self):
-        _, _, status_code = authenticate(self)
+        _, _, status_code = auth_driver(self,
+                                        'superuser1')
 
         self.assertEqual(status_code, 200)
 
     def test_refresh_token(self):
-        access_token, refresh_token, status_code = authenticate(self)
+        access_token, refresh_token, status_code = auth_driver(self,
+                                                               'superuser1')
         self.assertEqual(status_code, 200)
 
         payload = {
@@ -32,7 +34,8 @@ class DriverTokenTest(TestCase):
         self.assertEqual(response.status_code, 401)
 
     def test_verify_token(self):
-        access_token, refresh_token, status_code = authenticate(self)
+        access_token, refresh_token, status_code = auth_driver(self,
+                                                               'superuser1')
         self.assertEqual(status_code, 200)
 
         payload = {

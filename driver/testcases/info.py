@@ -6,7 +6,8 @@ class DriverInfoTest(TestCase):
         pass
 
     def test_get_info(self):
-        access_token, refresh_token, status_code = authenticate(self)
+        access_token, refresh_token, status_code = auth_driver(self,
+                                                               'superuser1')
         self.assertEqual(status_code, 200)
         response = self.client.get(
             '/api/driver/info',
@@ -15,7 +16,8 @@ class DriverInfoTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_post_info(self):
-        access_token, refresh_token, status_code = authenticate(self)
+        access_token, refresh_token, status_code = auth_driver(self,
+                                                               'superuser1')
         self.assertEqual(status_code, 200)
         payload = {
             'username': 'updatedUsername',
@@ -42,7 +44,8 @@ class DriverInfoTest(TestCase):
         self.assertEqual(payload, response.data)
 
     def test_invalid_post_info(self):
-        access_token, refresh_token, status_code = authenticate(self)
+        access_token, refresh_token, status_code = auth_driver(self,
+                                                               'superuser1')
         self.assertEqual(status_code, 200)
         payload = {
             'username': 'updatedUsername',
