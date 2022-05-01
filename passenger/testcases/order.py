@@ -269,6 +269,49 @@ class PassengerCreateOrderTest(TestCase):
         )
         self.assertEqual(response.status_code, 200)
 
+    def test_current_order(self):
+        access_token, refresh_token, status_code = auth_passenger(self,
+                                                                  'superuser0')
+        self.assertEqual(status_code, 200)
+
+        response = self.client.get(
+            '/api/passenger/order/current',
+            content_type='application/json',
+            **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['status'], -1)
+
+        # Add a new order
+        payload = {
+            "start": {
+                "name": "清华大学",
+                "address": "北京市海淀区双清路30号",
+                "latitude": "39.99970025463166",
+                "longitude": "116.32636879642432"
+            },
+            "end": {
+                "name": "故宫博物院",
+                "address": "中国北京市东城区景山前街4号",
+                "latitude": "39.9136172322172",
+                "longitude": "116.39729231302886",
+            }
+        }
+        response = self.client.post(
+            '/api/passenger/order/new',
+            data=payload,
+            content_type='application/json',
+            **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
+        )
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.get(
+            '/api/passenger/order/current',
+            content_type='application/json',
+            **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
+        )
+        self.assertEqual(response.data['status'], 0)
+
     def test_cancel_order(self):
         access_token, refresh_token, status_code = auth_passenger(self,
                                                                   'superuser0')
