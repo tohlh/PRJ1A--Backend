@@ -1,9 +1,9 @@
 from django.test import TestCase
 
 
-def authenticate(self):
+def auth_passenger(self, code):
     payload = {
-        'code': 'superuser0'
+        'code': code
     }
     response = self.client.post('/api/passenger/token',
                                 data=payload,

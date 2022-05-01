@@ -6,12 +6,14 @@ class PassengerTokenTest(TestCase):
         pass
 
     def test_obtain_passenger_token_pair(self):
-        _, _, status_code = authenticate(self)
+        _, _, status_code = auth_passenger(self,
+                                           'superuser0')
 
         self.assertEqual(status_code, 200)
 
     def test_refresh_passenger_token(self):
-        access_token, refresh_token, status_code = authenticate(self)
+        access_token, refresh_token, status_code = auth_passenger(self,
+                                                                  'superuser0')
         self.assertEqual(status_code, 200)
 
         payload = {
@@ -36,7 +38,8 @@ class PassengerTokenTest(TestCase):
         self.assertEqual(response.status_code, 401)
 
     def test_verify_passenger_token(self):
-        access_token, refresh_token, status_code = authenticate(self)
+        access_token, refresh_token, status_code = auth_passenger(self,
+                                                                  'superuser0')
         self.assertEqual(status_code, 200)
 
         payload = {

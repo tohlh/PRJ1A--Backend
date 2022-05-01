@@ -17,7 +17,8 @@ class PassengerEstimatePriceTest(TestCase):
 
     def test_valid_est_price(self):
         # valid request
-        access_token, refresh_token, status_code = authenticate(self)
+        access_token, refresh_token, status_code = auth_passenger(self,
+                                                                  'superuser0')
         self.assertEqual(status_code, 200)
 
         payload = {
@@ -65,7 +66,8 @@ class PassengerEstimatePriceTest(TestCase):
         )
         self.assertEqual(response.status_code, 401)
 
-        access_token, refresh_token, status_code = authenticate(self)
+        access_token, refresh_token, status_code = auth_passenger(self,
+                                                                  'superuser0')
         self.assertEqual(status_code, 200)
 
         # invalid method
@@ -104,7 +106,8 @@ class PassengerCreateOrderTest(TestCase):
             )
 
     def test_create_order(self):
-        access_token, refresh_token, status_code = authenticate(self)
+        access_token, refresh_token, status_code = auth_passenger(self,
+                                                                  'superuser0')
         self.assertEqual(status_code, 200)
 
         payload = {
@@ -130,7 +133,8 @@ class PassengerCreateOrderTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_current_order_exists(self):
-        access_token, refresh_token, status_code = authenticate(self)
+        access_token, refresh_token, status_code = auth_passenger(self,
+                                                                  'superuser0')
         self.assertEqual(status_code, 200)
 
         payload = {
@@ -165,7 +169,8 @@ class PassengerCreateOrderTest(TestCase):
         self.assertEqual(response.status_code, 400)
 
     def test_get_current_order(self):
-        access_token, refresh_token, status_code = authenticate(self)
+        access_token, refresh_token, status_code = auth_passenger(self,
+                                                                  'superuser0')
         self.assertEqual(status_code, 200)
 
         # No current order
@@ -209,7 +214,8 @@ class PassengerCreateOrderTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_cancel_order(self):
-        access_token, refresh_token, status_code = authenticate(self)
+        access_token, refresh_token, status_code = auth_passenger(self,
+                                                                  'superuser0')
         self.assertEqual(status_code, 200)
 
         payload = {
@@ -255,7 +261,8 @@ class PassengerCreateOrderTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_update_location(self):
-        access_token, refresh_token, status_code = authenticate(self)
+        access_token, refresh_token, status_code = auth_passenger(self,
+                                                                  'superuser0')
         self.assertEqual(status_code, 200)
 
         payload = {
@@ -296,7 +303,8 @@ class PassengerCreateOrderTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_list_orders(self):
-        access_token, refresh_token, status_code = authenticate(self)
+        access_token, refresh_token, status_code = auth_passenger(self,
+                                                                  'superuser0')
         self.assertEqual(status_code, 200)
 
         response = self.client.get(
