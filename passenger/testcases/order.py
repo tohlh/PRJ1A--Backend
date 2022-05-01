@@ -599,3 +599,10 @@ class PassengerUnauthenticatedTests(TestCase):
             content_type='application/json',
         )
         self.assertEqual(response.status_code, 401)
+
+    def test_update_location(self):
+        response = self.client.post(
+            '/api/passenger/order/update-location',
+            content_type='application/json',
+        )
+        self.assertEqual(response.status_code, 401)
