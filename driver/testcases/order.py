@@ -605,7 +605,7 @@ class DriverUnauthenticatedTests(TestCase):
             content_type='application/json'
         )
         self.assertEqual(response.status_code, 401)
-    
+
     def test_pickup_order(self):
         response = self.client.post(
             '/api/driver/order/pickup',
