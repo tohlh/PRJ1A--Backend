@@ -616,8 +616,8 @@ class PassengerUnauthenticatedTests(TestCase):
 class PassengerUnregisteredTests(TestCase):
     def setUp(self):
         Passenger.objects.create(id=1)
-        access_token, refresh_token, status_code = auth_driver(self,
-                                                               'superuser1')
+        access_token, refresh_token, status_code = auth_passenger(self,
+                                                                  'superuser0')
 
     def test_est_price(self):
         access_token, refresh_token, status_code = auth_passenger(self,
