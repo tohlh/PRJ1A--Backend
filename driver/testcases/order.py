@@ -627,6 +627,13 @@ class DriverUnauthenticatedTests(TestCase):
         )
         self.assertEqual(response.status_code, 401)
 
+    def test_list_orders(self):
+        response = self.client.get(
+            '/api/driver/order/list',
+            content_type='application/json'
+        )
+        self.assertEqual(response.status_code, 401)
+
 
 class DriverUnregisteredTests(TestCase):
     def setUp(self):
