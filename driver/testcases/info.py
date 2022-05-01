@@ -73,6 +73,7 @@ class DriverInfoTest(TestCase):
         payload = {
             'username': 'updatedUsername',
             'phone': '01234567890',
+            'carplate': '京1234',
             'age': 30,
             'identification_no': '012345678901233457'
         }
@@ -102,6 +103,7 @@ class DriverInfoTest(TestCase):
         self.assertEqual({
             'username': '',
             'phone': '',
+            'carplate': '',
             'age': None,
             'identification_no': ''
         }, response.data)
