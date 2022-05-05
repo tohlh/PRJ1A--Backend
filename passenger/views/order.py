@@ -123,7 +123,7 @@ def PassengerGetOrderView(request):
 
     if unpaid_order_exists(passenger_id):
         unpaid_order = get_unpaid_order(passenger_id)
-        serializer = PassengerCompletedOrderSerializer(unpaid_order)
+        serializer = PassengerOrderInfoSerializer(unpaid_order)
         return payload_response(serializer.data)
 
     if not (pending_order_exists(passenger_id) or
@@ -131,14 +131,7 @@ def PassengerGetOrderView(request):
         return payload_response(None)
 
     order = get_current_order(passenger_id)
-
-    _, order.distance = get_direction(
-        order.start_POI_lat,
-        order.start_POI_long,
-        order.end_POI_lat,
-        order.end_POI_long
-    )
-    serializer = PassengerOngoingOrderSerializer(order)
+    serializer = PassengerOrderInfoSerializer(order)
     return payload_response(serializer.data)
 
 
@@ -229,7 +222,7 @@ def PassengerListOrdersView(request):
         passenger__id=passenger_id
     ).order_by('-created_at')
     orders = orders[offset:offset+limit]
-    serializer = PassengerCompletedOrderSerializer(
+    serializer = PassengerOrderListSerializer(
         orders,
         many=True
     )
