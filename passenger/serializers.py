@@ -74,9 +74,7 @@ class TimeSerializer(serializers.Serializer):
 class PassengerOrderInfoSerializer(serializers.ModelSerializer):
     start = StartPointSerializer(source='*')
     end = EndPointSerializer(source='*')
-    price = serializers.DecimalField(source='est_price',
-                                     max_digits=6,
-                                     decimal_places=2)
+    price = PriceSerializer(source='*')
     distance = DistanceSerializer(source='*')
     points = PointsSerializer(source='*')
     driver = DriverInfoSerializer()
@@ -91,9 +89,7 @@ class PassengerOrderInfoSerializer(serializers.ModelSerializer):
 class PassengerOrderListSerializer(serializers.ModelSerializer):
     start = StartPointSerializer(source='*')
     end = EndPointSerializer(source='*')
-    price = serializers.DecimalField(source='real_price',
-                                     max_digits=6,
-                                     decimal_places=2)
+    price = PriceSerializer(source='*')
     time = TimeSerializer(source='*')
 
     class Meta:
@@ -107,10 +103,11 @@ class PassengerOrderDetailSerializer(serializers.ModelSerializer):
     start = StartPointSerializer(source='*')
     end = EndPointSerializer(source='*')
     points = PointsSerializer(source='*')
+    price = PriceSerializer(source='*')
     driver = DriverInfoSerializer()
 
     class Meta:
         model = Order
-        fields = ['start', 'end', 'id', 'driver'
-                  'price', 'distance', 'points'
+        fields = ['start', 'end', 'id', 'driver',
+                  'price', 'distance', 'points',
                   'status']

@@ -230,6 +230,29 @@ def PassengerListOrdersView(request):
 
 
 @api_view(('GET',))
+def PassengerOrderDetailsView(request):
+    permission_classes = (IsAuthenticated,)
+    if not is_passenger(request):
+        return unauthorized_response()
+    passenger_id = get_passenger_id(request)
+
+    if passenger_unregistered(passenger_id):
+        return unregistered_response({
+            'errMsg': '请填写个人资料。'
+        })
+
+    id = int(request.GET.get('id', -1))
+    if id == -1:
+        return bad_request_response({
+            'errMsg': '请提供订单 id'
+        })
+
+    order = Order.objects.get(id=id)
+    serializer = PassengerOrderDetailSerializer(order)
+    return payload_response(serializer.data)
+
+
+@api_view(('GET',))
 def PassengerCurrentOrderView(request):
     permission_classes = (IsAuthenticated,)
     if not is_passenger(request):
