@@ -176,7 +176,7 @@ def DriverListOrdersView(request):
     limit = int(request.GET.get('limit', 10))
 
     orders = Order.objects.filter(
-        Q(status=3) | Q(status=4) | Q(status=6),
+        Q(status=3) | Q(status=4) | Q(status=5) | Q(status=6),
         driver__id=driver_id
     ).order_by('-created_at')
     orders = orders[offset:offset+limit]
