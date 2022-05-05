@@ -123,7 +123,7 @@ def PassengerGetOrderView(request):
 
     if unpaid_order_exists(passenger_id):
         unpaid_order = get_unpaid_order(passenger_id)
-        serializer = PassengerCompletedOrderSerializer(unpaid_order)
+        serializer = PassengerOrderInfoSerializer(unpaid_order)
         return payload_response(serializer.data)
 
     if not (pending_order_exists(passenger_id) or
@@ -131,14 +131,7 @@ def PassengerGetOrderView(request):
         return payload_response(None)
 
     order = get_current_order(passenger_id)
-
-    _, order.distance = get_direction(
-        order.start_POI_lat,
-        order.start_POI_long,
-        order.end_POI_lat,
-        order.end_POI_long
-    )
-    serializer = PassengerOngoingOrderSerializer(order)
+    serializer = PassengerOrderInfoSerializer(order)
     return payload_response(serializer.data)
 
 
@@ -225,14 +218,37 @@ def PassengerListOrdersView(request):
     limit = int(request.GET.get('limit', 10))
 
     orders = Order.objects.filter(
-        Q(status=3) | Q(status=4) | Q(status=6),
+        Q(status=3) | Q(status=4) | Q(status=5) | Q(status=6),
         passenger__id=passenger_id
     ).order_by('-created_at')
     orders = orders[offset:offset+limit]
-    serializer = PassengerCompletedOrderSerializer(
+    serializer = PassengerOrderListSerializer(
         orders,
         many=True
     )
+    return payload_response(serializer.data)
+
+
+@api_view(('GET',))
+def PassengerOrderDetailsView(request):
+    permission_classes = (IsAuthenticated,)
+    if not is_passenger(request):
+        return unauthorized_response()
+    passenger_id = get_passenger_id(request)
+
+    if passenger_unregistered(passenger_id):
+        return unregistered_response({
+            'errMsg': '请填写个人资料。'
+        })
+
+    id = int(request.GET.get('id', -1))
+    if id == -1:
+        return bad_request_response({
+            'errMsg': '请提供订单 id'
+        })
+
+    order = Order.objects.get(id=id)
+    serializer = PassengerOrderDetailSerializer(order)
     return payload_response(serializer.data)
 
 

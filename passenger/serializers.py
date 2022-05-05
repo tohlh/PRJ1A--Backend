@@ -25,53 +25,89 @@ class DriverInfoSerializer(serializers.ModelSerializer):
         fields = ['username', 'carplate', 'phone']
 
 
-class DirectionFieldSerializer(serializers.Serializer):
+class PointsSerializer(serializers.Serializer):
     def to_representation(self, instance):
-        ret, _ = get_direction(
-            instance.start_POI_lat,
-            instance.start_POI_long,
-            instance.end_POI_lat,
-            instance.end_POI_long
-        )
-        return ret
+        if instance.status <= 2:
+            ret, _ = get_direction(
+                instance.start_POI_lat,
+                instance.start_POI_long,
+                instance.end_POI_lat,
+                instance.end_POI_long
+            )
+            return ret
 
-
-class PathFieldSerializer(serializers.Serializer):
-    def to_representation(self, instance):
-        path_list = instance.before_pickup_path
+        path_list = instance.after_pickup_path
         if path_list == '':
             path_list = dict_list_to_base64_json([])
         path_list = base64_json_to_dict_list(path_list)
         return path_list
 
 
-class PassengerOngoingOrderSerializer(serializers.ModelSerializer):
+class DistanceSerializer(serializers.Serializer):
+    def to_representation(self, instance):
+        if instance.status <= 2:
+            _, dist = get_direction(
+                instance.start_POI_lat,
+                instance.start_POI_long,
+                instance.end_POI_lat,
+                instance.end_POI_long
+            )
+            return dist
+        return instance.distance
+
+
+class PriceSerializer(serializers.Serializer):
+    def to_representation(self, instance):
+        if instance.status <= 2:
+            return instance.est_price
+        elif instance.status <= 4:
+            return 0
+        elif instance.status <= 6:
+            return instance.real_price
+
+
+class TimeSerializer(serializers.Serializer):
+    create = serializers.DateTimeField(source='created_at')
+    end = serializers.DateTimeField(source='ended_at')
+
+
+class PassengerOrderInfoSerializer(serializers.ModelSerializer):
     start = StartPointSerializer(source='*')
     end = EndPointSerializer(source='*')
+    price = PriceSerializer(source='*')
+    distance = DistanceSerializer(source='*')
+    points = PointsSerializer(source='*')
     driver = DriverInfoSerializer()
-    price = serializers.DecimalField(source='est_price',
-                                     max_digits=6,
-                                     decimal_places=2)
-    points = DirectionFieldSerializer(source='*')
 
     class Meta:
         model = Order
         fields = ['start', 'end', 'id',
-                  'driver', 'distance', 'price',
-                  'status', 'points']
+                  'points', 'distance', 'price',
+                  'status', 'driver']
 
 
-class PassengerCompletedOrderSerializer(serializers.ModelSerializer):
+class PassengerOrderListSerializer(serializers.ModelSerializer):
     start = StartPointSerializer(source='*')
     end = EndPointSerializer(source='*')
-    driver = DriverInfoSerializer()
-    price = serializers.DecimalField(source='real_price',
-                                     max_digits=6,
-                                     decimal_places=2)
-    points = PathFieldSerializer(source='*')
+    price = PriceSerializer(source='*')
+    time = TimeSerializer(source='*')
 
     class Meta:
         model = Order
         fields = ['start', 'end', 'id',
-                  'driver', 'distance', 'price',
-                  'status', 'points']
+                  'distance', 'price',
+                  'status', 'time']
+
+
+class PassengerOrderDetailSerializer(serializers.ModelSerializer):
+    start = StartPointSerializer(source='*')
+    end = EndPointSerializer(source='*')
+    points = PointsSerializer(source='*')
+    price = PriceSerializer(source='*')
+    driver = DriverInfoSerializer()
+
+    class Meta:
+        model = Order
+        fields = ['start', 'end', 'id', 'driver',
+                  'price', 'distance', 'points',
+                  'status']
