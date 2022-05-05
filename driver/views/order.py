@@ -146,6 +146,12 @@ def DriverEndOrderView(request):
         })
 
     current_order = get_current_order(driver_id)
+
+    if current_order.status < 2:
+        return bad_request_response({
+            'errMsg': '当前阶段不能结束订单。'
+        })
+
     Order.objects.filter(
         id=current_order.id
     ).update(
