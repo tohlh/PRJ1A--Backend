@@ -521,6 +521,23 @@ class PassengerOrderTests(TestCase):
                 f'清华大学{89 - x}'
             )
 
+    def test_order_details(self):
+        access_token, refresh_token, status_code = auth_passenger(self,
+                                                                  'superuser0')
+        self.assertEqual(status_code, 200)
+
+        response = self.client.get(
+            '/api/passenger/order/detail?id=10',
+            content_type='application/json',
+            **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
+        )
+        self.assertEqual(response.status_code, 200)
+
+        self.assertEqual(
+            response.data['start']['name'],
+            '清华大学9'
+        )
+
 
 class PassengerUnauthenticatedTests(TestCase):
     def setUp(self):
@@ -608,6 +625,13 @@ class PassengerUnauthenticatedTests(TestCase):
     def test_list_orders(self):
         response = self.client.get(
             '/api/passenger/order/list',
+            content_type='application/json',
+        )
+        self.assertEqual(response.status_code, 401)
+
+    def test_order_details(self):
+        response = self.client.get(
+            '/api/passenger/order/detail',
             content_type='application/json',
         )
         self.assertEqual(response.status_code, 401)
@@ -758,6 +782,18 @@ class PassengerUnregisteredTests(TestCase):
         self.assertEqual(response.status_code, 402)
         self.assertEqual(response.data['errMsg'], '请填写个人资料。')
 
+    def test_order_details(self):
+        access_token, refresh_token, status_code = auth_passenger(self,
+                                                                  'superuser0')
+        self.assertEqual(status_code, 200)
+
+        response = self.client.get(
+            '/api/passenger/order/detail',
+            content_type='application/json',
+            **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
+        )
+        self.assertEqual(response.status_code, 402)
+
 
 class PassengerInvalidAuthTests(TestCase):
     def setUp(self):
@@ -889,6 +925,18 @@ class PassengerInvalidAuthTests(TestCase):
 
         response = self.client.get(
             '/api/passenger/order/list',
+            content_type='application/json',
+            **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
+        )
+        self.assertEqual(response.status_code, 401)
+
+    def test_order_details(self):
+        access_token, refresh_token, status_code = auth_driver(self,
+                                                               'superuser1')
+        self.assertEqual(status_code, 200)
+
+        response = self.client.get(
+            '/api/passenger/order/detail',
             content_type='application/json',
             **{'HTTP_AUTHORIZATION': f'Bearer {access_token}'}
         )
