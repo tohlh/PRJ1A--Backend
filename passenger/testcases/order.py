@@ -130,7 +130,6 @@ class PassengerOrderTests(TestCase):
                 end_POI_long=116.39729231302886,
                 est_price=100,
                 status=6,
-                updated_at=timezone.now() - timedelta(minutes=5)
             )
 
     def test_create_order(self):
@@ -389,7 +388,6 @@ class PassengerOrderTests(TestCase):
             end_POI_lat=float(payload['end']['latitude']),
             end_POI_long=float(payload['end']['longitude']),
             est_price=100,
-            updated_at=timezone.now(),
             status=2
         )
         response = self.client.post(
@@ -431,7 +429,6 @@ class PassengerOrderTests(TestCase):
             end_POI_lat=float(payload['end']['latitude']),
             end_POI_long=float(payload['end']['longitude']),
             est_price=100,
-            updated_at=timezone.now(),
             status=5
         )
         response = self.client.post(

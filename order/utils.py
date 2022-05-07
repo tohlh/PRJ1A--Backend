@@ -119,6 +119,7 @@ def match_orders():
             if dist_between <= 15:
                 Order.objects.filter(id=order.id).update(
                     driver=driver,
-                    status=1
+                    status=1,
+                    accepted_at=timezone.now()
                 )
                 break
