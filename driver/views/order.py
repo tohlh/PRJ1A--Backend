@@ -99,7 +99,8 @@ def DriverPickupPassengerView(request):
     Order.objects.filter(
         id=current_order.id
     ).update(
-        status=2
+        status=2,
+        started_at=timezone.now()
     )
     return payload_response({})
 
@@ -124,7 +125,8 @@ def DriverCancelOrderView(request):
     Order.objects.filter(
         id=current_order.id
     ).update(
-        status=4
+        status=4,
+        canceled_at=timezone.now()
     )
     return payload_response({})
 

@@ -87,18 +87,6 @@ def get_current_order(passenger_id):
         return ret.first()
 
 
-def cancel_current_order(passenger_id):
-    Order.objects.filter(
-        Q(status=0) | Q(status=1),
-        passenger__id=passenger_id,
-    ).update(status=3)
-
-    Order.objects.filter(
-        status=2,
-        passenger__id=passenger_id,
-    ).update(status=3)
-
-
 def get_unpaid_order(passenger_id):
     ret = Order.objects.filter(
         status=5,

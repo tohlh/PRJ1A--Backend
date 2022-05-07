@@ -100,7 +100,6 @@ def PassengerNewOrderView(request):
         end_POI_lat=float(data['end']['latitude']),
         end_POI_long=float(data['end']['longitude']),
         est_price=100,
-        updated_at=timezone.now(),
         status=0
     )
 
@@ -159,7 +158,14 @@ def PassengerCancelOrderView(request):
             'errMsg': '当前阶段不允许取消订单。'
         })
 
-    cancel_current_order(passenger_id)
+    Order.objects.filter(
+        Q(status=0) | Q(status=1) | Q(status=2),
+        passenger__id=passenger_id,
+    ).update(
+        status=3,
+        canceled_at=timezone.now()
+    )
+
     return payload_response({})
 
 
@@ -308,6 +314,7 @@ def PassengerPayOrderView(request):
         passenger__id=passenger_id,
         status=5
     ).update(
-        status=6
+        status=6,
+        paid_at=timezone.now()
     )
     return payload_response({})
