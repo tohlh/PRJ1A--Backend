@@ -66,11 +66,6 @@ class PriceSerializer(serializers.Serializer):
             return instance.real_price
 
 
-class TimeSerializer(serializers.Serializer):
-    create = serializers.DateTimeField(source='created_at')
-    end = serializers.DateTimeField(source='ended_at')
-
-
 class PassengerOrderInfoSerializer(serializers.ModelSerializer):
     start = StartPointSerializer(source='*')
     end = EndPointSerializer(source='*')
@@ -87,6 +82,9 @@ class PassengerOrderInfoSerializer(serializers.ModelSerializer):
 
 
 class PassengerOrderListSerializer(serializers.ModelSerializer):
+    class TimeSerializer(serializers.Serializer):
+        create = serializers.DateTimeField(source='created_at')
+
     start = StartPointSerializer(source='*')
     end = EndPointSerializer(source='*')
     price = PriceSerializer(source='*')
@@ -100,6 +98,14 @@ class PassengerOrderListSerializer(serializers.ModelSerializer):
 
 
 class PassengerOrderDetailSerializer(serializers.ModelSerializer):
+    class TimeSerializer(serializers.Serializer):
+        create = serializers.DateTimeField(source='created_at')
+        accept = serializers.DateTimeField(source='accepted_at')
+        start = serializers.DateTimeField(source='started_at')
+        end = serializers.DateTimeField(source='ended_at')
+        paid = serializers.DateTimeField(source='paid_at')
+        cancel = serializers.DateTimeField(source='canceled_at')
+
     start = StartPointSerializer(source='*')
     end = EndPointSerializer(source='*')
     points = PointsSerializer(source='*')
