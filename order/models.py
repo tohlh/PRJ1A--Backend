@@ -33,7 +33,11 @@ class Order(models.Model):
                                      decimal_places=2)
 
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField()
+    accepted_at = models.DateTimeField(null=True)
+    started_at = models.DateTimeField(null=True)
+    ended_at = models.DateTimeField(null=True)
+    paid_at = models.DateTimeField(null=True)
+    canceled_at = models.DateTimeField(null=True)
 
     # After the order is fulfilled
     ended_at = models.DateTimeField(blank=True, null=True)
