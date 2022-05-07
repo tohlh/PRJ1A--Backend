@@ -50,5 +50,8 @@ urlpatterns = [
      # driver's message
      path('msg',
           DriverMessageView,
-          name='driver_message')
+          name='driver_message'),
+     path('msg/clear',
+          DriverClearMessageView,
+          name='clear_message')
 ]

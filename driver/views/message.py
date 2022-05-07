@@ -13,6 +13,11 @@ def DriverMessageView(request):
         return unauthorized_response()
     driver_id = get_driver_id(request)
 
+    if driver_unregistered(driver_id):
+        return unregistered_response({
+            'errMsg': '请填写个人资料。'
+        })
+
     if request.method == 'GET':
         messages = DriverMessage.objects.filter(
             driver__id=driver_id
@@ -31,4 +36,22 @@ def DriverMessageView(request):
             value=data['value'],
             color=data['color']
         )
+    return payload_response({})
+
+@api_view(('POST',))
+def DriverClearMessageView(request):
+    permission_classes = (IsAuthenticated,)
+    if not is_driver(request):
+        return unauthorized_response()
+    driver_id = get_driver_id(request)
+
+    if driver_unregistered(driver_id):
+        return unregistered_response({
+            'errMsg': '请填写个人资料。'
+        })
+
+    DriverMessage.objects.filter(
+        driver=Driver.objects.get(id=driver_id)
+    ).delete()
+
     return payload_response({})
