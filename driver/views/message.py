@@ -38,6 +38,7 @@ def DriverMessageView(request):
         )
     return payload_response({})
 
+
 @api_view(('POST',))
 def DriverClearMessageView(request):
     permission_classes = (IsAuthenticated,)

@@ -115,7 +115,7 @@ class PassengerEstimatePriceTest(TestCase):
             content_type='application/json',
         )
         self.assertEqual(response.status_code, 401)
-    
+
     def test_unregistered(self):
         access_token, refresh_token, status_code = auth_driver(self,
                                                                'superuser1')
