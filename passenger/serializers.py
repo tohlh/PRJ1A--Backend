@@ -110,10 +110,11 @@ class PassengerOrderDetailSerializer(serializers.ModelSerializer):
     end = EndPointSerializer(source='*')
     points = PointsSerializer(source='*')
     price = PriceSerializer(source='*')
+    time = TimeSerializer(source='*')
     driver = DriverInfoSerializer()
 
     class Meta:
         model = Order
         fields = ['start', 'end', 'id', 'driver',
                   'price', 'distance', 'points',
-                  'status']
+                  'status', 'time']
