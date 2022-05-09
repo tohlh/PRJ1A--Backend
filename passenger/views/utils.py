@@ -115,7 +115,7 @@ def current_driver_rotation(passenger_id):
     point_2 = points[-2]
     x = point_1['longitude'] - point_2['longitude']
     x = x / point_1['latitude'] - point_2['latitude']
-    return math.atan(x)
+    return (math.atan(x) / math.pi) * 180
 
 
 # Http Responses
