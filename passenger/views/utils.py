@@ -98,14 +98,17 @@ def get_unpaid_order(passenger_id):
 
 def current_driver_rotation(passenger_id):
     current_order = get_current_order(passenger_id)
-    decoded_json_string = base64.b64decode(
-        current_order.before_pickup_path
-    )
 
     points = {}
     if current_order.status == 1:
+        decoded_json_string = base64.b64decode(
+            current_order.before_pickup_path
+        )
         points = json.loads(decoded_json_string)
     elif current_order.status == 2:
+        decoded_json_string = base64.b64decode(
+            current_order.after_pickup_path
+        )
         points = json.loads(decoded_json_string)
 
     if len(points) <= 1:
@@ -113,9 +116,10 @@ def current_driver_rotation(passenger_id):
 
     point_1 = points[-1]
     point_2 = points[-2]
-    x = point_1['longitude'] - point_2['longitude']
-    x = x / point_1['latitude'] - point_2['latitude']
-    return (math.atan(x) / math.pi) * 180
+    delta_x = point_1['latitude'] - point_2['latitude']
+    delta_y = point_1['longitude'] - point_2['longitude']
+
+    return (math.atan2(delta_y, delta_x) * (180 / math.pi)) + 90
 
 
 # Http Responses
