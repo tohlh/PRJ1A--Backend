@@ -101,18 +101,19 @@ def current_driver_rotation(passenger_id):
 
     points = {}
     if current_order.status == 1:
+        if current_order.before_pickup_path == '':
+            return 0
         decoded_json_string = base64.b64decode(
             current_order.before_pickup_path
         )
         points = json.loads(decoded_json_string)
     elif current_order.status == 2:
+        if current_order.after_pickup_path == '':
+            return 0
         decoded_json_string = base64.b64decode(
             current_order.after_pickup_path
         )
         points = json.loads(decoded_json_string)
-
-    if len(points) <= 1:
-        return 0
 
     point_1 = points[-1]
     point_2 = points[-2]
